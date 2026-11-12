@@ -1,0 +1,38 @@
+{
+  "$comment": "Source of truth for scripts/figma/*. Node IDs come from Figma URLs (node-id=4-2 → 4:2).",
+  "fileKey": "B3iC5nfXKqOsDhrtc2UC4r",
+  "page": "Amaj Redesign",
+  "mobileScale": 2,
+  "frames": {
+    "4:2": "1-hero-desktop",
+    "176:678": "1-hero-mobile",
+    "23:30": "2-services-desktop",
+    "176:747": "2-services-mobile",
+    "57:279": "3-work-desktop",
+    "176:833": "3-work-mobile",
+    "106:806": "4-team-desktop",
+    "176:907": "4-team-mobile",
+    "93:146": "5-testimonials-desktop",
+    "176:965": "5-testimonials-mobile",
+    "138:1190": "6-blog-desktop",
+    "176:1037": "6-blog-mobile"
+  },
+  "icons": {
+    "4:46": "logo-desktop",
+    "176:719": "logo-mobile",
+    "4:49": "chevron-down",
+    "4:56": "arrow-right",
+    "76:45": "service-ai",
+    "76:48": "service-uiux",
+    "76:51": "service-dev",
+    "76:54": "service-marketing",
+    "I23:50;23:41": "service-arrow",
+    "138:1300": "calendar",
+    "138:1305": "clock",
+    "138:1287": "arrow-right-blog",
+    "57:310": "arrow-prev",
+    "57:312": "arrow-next",
+    "57:305": "work-cta",
+    "106:869": "team-logo-mark"
+  }
+}

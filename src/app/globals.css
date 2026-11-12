@@ -1,0 +1,217 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens — normalized from Figma "Amaj Agency" (page: Amaj Redesign).
+ * Desktop values are taken at 1:1 from the 1672px frames.
+ * Mobile values are the 853px frames divided by 2.
+ * Near-duplicate values (<~4% / visually identical) were merged; see /styleguide.
+ */
+@theme {
+  /* ---------- Fonts ---------- */
+  --font-sans: var(--font-quicksand), var(--font-vazirmatn), ui-sans-serif,
+    system-ui, sans-serif;
+
+  /* ---------- Surfaces ---------- */
+  --color-ink-950: #070a19; /* hero, services   (merged #080a1b) */
+  --color-ink-900: #09122f; /* work, team, testimonials, blog, mobile (merged #071231 #08102b #09132d #0b1030) */
+  --color-ink-800: #0d183b; /* blog panels (merged #0c183a) */
+  --color-ink-700: #142043; /* testimonial cards */
+  --color-dusk: #171b3d; /* services → work transition */
+  --color-card: #111525; /* service cards */
+  --color-tile: #1a2033; /* service icon tiles */
+
+  /* ---------- Text ---------- */
+  --color-fg: #f7f8ff; /* headings & primary text (merged #f1f1fa…#fcfdff, 12 variants) */
+  --color-fg-soft: #e3e6f5; /* card copy, meta (merged #e0e5f6 #e6e5f2 #e6ebff #eef1fd #e1dff8 #e0e5f5) */
+  --color-fg-dim: #cfd5ea; /* blog excerpts (merged #cad5ed #d4ddf2) */
+  --color-fg-muted: #b6b9cb; /* section leads, desktop (merged #b5b7cc #b5b8cb #bbc0d0) */
+  --color-fg-muted-blue: #bdc6e4; /* roles, mobile leads (merged #b6c0e1 #bfc9e8 #bdc5dd #bdc7e4 #bcc8e7 #b9c7ef) */
+  --color-fg-faint: #626b88; /* client logos */
+
+  /* ---------- Brand / accents ---------- */
+  --color-brand: #4633ff; /* primary violet (merged #4930ff #482cff #5032ff #3e2bff) */
+  --color-sky: #54ccff; /* gradient end (merged #35c8fb #37c7f6 #44c6ff) */
+  --color-periwinkle: #789aff; /* eyebrows (merged #7c9dff #869dff) */
+  --color-indigo: #6a84ff; /* accent rules, tags, "Blogs" (merged #6e8aff #6f8eff #748bff #617af5) */
+  --color-lilac: #a475ff; /* active pager dot */
+  --color-pager: #9ca4db; /* inactive pager dot */
+  --color-sunset-from: #ff6a00;
+  --color-sunset-via: #ff974d;
+  --color-sunset-to: #ffd2b2;
+
+  /* ---------- Lines ---------- */
+  --color-line-subtle: rgb(38 44 66 / 0.7); /* service card border */
+  --color-line: rgb(95 107 152 / 0.5); /* nav, blog cards, arrow pills (merged 5 variants) */
+  --color-line-strong: rgb(105 115 151 / 0.8); /* secondary button */
+  --color-divider: #899acd; /* card separators (merged #9dafd7/0.68, #9caff0) */
+  --color-grid: rgb(100 117 164 / 0.07); /* background grid (merged #607198/0.08, #6981b0/0.05–0.08) */
+
+  /* ---------- Radii ---------- */
+  --radius-sm: 10px; /* buttons, nav, service cards */
+  --radius-md: 16px; /* icon tiles (17) */
+  --radius-lg: 20px; /* blog cards, arrow pills (19, 20, 22) */
+  --radius-xl: 28px; /* work cards (24–30) */
+
+  /* ---------- Type scale (desktop) ---------- */
+  --text-display: 72px; /* bold headline word */
+  --text-display--line-height: 1.08;
+  --text-display-light: 67px; /* light headline word */
+  --text-display-light--line-height: 1.08;
+  --text-h2: 36px; /* featured blog title (36.5) */
+  --text-h2--line-height: 1.17;
+  --text-h3: 24px; /* blog card & testimonial names (23.3, 24) */
+  --text-h3--line-height: 1.17;
+  --text-h4: 20px; /* service card titles */
+  --text-h4--line-height: 1.4;
+  --text-eyebrow: 24px;
+  --text-eyebrow--line-height: 1.1;
+  --text-lead: 24px; /* section subtitles */
+  --text-lead--line-height: 1.33;
+  --text-body-lg: 20px;
+  --text-body-lg--line-height: 1.3;
+  --text-body: 16.5px; /* card copy (merged 16, 16.7) */
+  --text-body--line-height: 1.45;
+  --text-ui: 17px; /* nav links, buttons */
+  --text-ui--line-height: 1.4;
+  --text-meta: 16.5px; /* dates, read time (16.2, 16.5) */
+  --text-meta--line-height: 1.33;
+  --text-overline: 13px; /* "Trusted by" */
+  --text-overline--line-height: 1.5;
+
+  /* ---------- Tracking ---------- */
+  --tracking-eyebrow: 0.16em; /* unified: was 0 / 3.4 / 4.25 / 7px */
+  --tracking-overline: 0.28em;
+
+  /* ---------- Layout ---------- */
+  --container-page: 1672px;
+}
+
+@utility text-gradient-sunset {
+  background-image: linear-gradient(
+    90deg,
+    var(--color-sunset-from) 0%,
+    var(--color-sunset-via) 38%,
+    var(--color-sunset-to) 100%
+  );
+  background-clip: text;
+  color: transparent;
+}
+
+@utility text-gradient-indigo {
+  background-image: linear-gradient(90deg, #6f8eff 0%, #6984ff 100%);
+  background-clip: text;
+  color: transparent;
+}
+
+@utility bg-gradient-primary {
+  background-image: linear-gradient(
+    90deg,
+    var(--color-brand) 0%,
+    #3e2cff 75%,
+    var(--color-sky) 100%
+  );
+}
+
+/* Architectural background grid. Desktop: 85px cells, 0.8px lines.
+   Mobile: 38px cells, 0.5px lines (Figma ÷ 2). */
+@utility bg-grid {
+  --grid-size: 38px;
+  --grid-line: 0.5px;
+  --grid-color: rgb(105 129 176 / 0.08);
+  background-image:
+    linear-gradient(to right, var(--grid-color) var(--grid-line), transparent var(--grid-line)),
+    linear-gradient(to bottom, var(--grid-color) var(--grid-line), transparent var(--grid-line));
+  background-size: var(--grid-size) var(--grid-size);
+  background-position: var(--grid-x, 0) var(--grid-y, 0);
+  @variant lg {
+    --grid-size: 85px;
+    --grid-line: 0.8px;
+    --grid-color: rgb(96 113 152 / 0.075);
+  }
+}
+
+/* Fine analog grain (Figma "01.5 / fine analog grain": lavender noise, alpha ≤ 4%). */
+@utility bg-grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .59 0 0 0 0 .62 0 0 0 0 .77 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---------- Motion ---------- */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(2%, -3%, 0) scale(1.06);
+  }
+}
+
+@utility animate-rise {
+  animation: rise-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--delay, 0ms);
+}
+
+@utility animate-fade {
+  animation: fade-in 1.2s ease-out both;
+  animation-delay: var(--delay, 0ms);
+}
+
+@utility animate-drift {
+  animation: drift var(--duration, 18s) ease-in-out infinite;
+  animation-delay: var(--delay, 0ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- Base ---------- */
+html {
+  background: var(--color-ink-900);
+  color: var(--color-fg);
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-sans);
+  overflow-x: clip;
+}
+
+/* Letter-spacing breaks Persian cursive joining — always reset it in RTL. */
+:lang(fa) * {
+  letter-spacing: 0 !important;
+}
+
+/* Anchored sections clear the fixed navigation. */
+section[id] {
+  scroll-margin-top: 96px;
+}
