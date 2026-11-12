@@ -4,7 +4,7 @@ type Tone = "periwinkle" | "light";
 
 const tones: Record<Tone, { text: string; line: string }> = {
   periwinkle: { text: "text-periwinkle", line: "bg-periwinkle" },
-  light: { text: "text-[#f3f3ff]", line: "bg-[#d8dffa]/43" },
+  light: { text: "text-[#f4f4fc] lg:text-[#f3f3ff]", line: "bg-[#b9c7ee]/85 lg:bg-[#d8dffa]/43" },
 };
 
 /**

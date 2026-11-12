@@ -53,24 +53,27 @@
     "eyebrow": "Our work",
     "titleLight": "Products That",
     "titleBold": "Deliver",
-    "subtitle": "Real projects, real results — built with a focus on reliability, performance, and long-term value.",
+    "subtitle": "Real projects, real results — built with a focus <br></br>on reliability, performance, and long-term value.",
     "previous": "Previous project",
     "next": "Next project",
     "viewProject": "View {name} case study",
     "projects": {
       "finly": {
         "name": "Finly",
-        "description": "A smart personal finance app for tracking spending and growing savings."
+        "description": "A personal finance app for\nsmarter spending and saving."
       },
       "nexora": {
         "name": "Nexora",
-        "description": "A modern platform for team collaboration and productivity."
+        "description": "A modern platform for team\ncollaboration and productivity."
       },
       "medico": {
         "name": "Medico",
-        "description": "A healthcare dashboard for managing patients and clinical records."
+        "description": "A healthcare dashboard for\npatients and clinical records."
       }
-    }
+    },
+    "carouselLabel": "Featured projects",
+    "goTo": "Show {name}",
+    "slideStatus": "{name}, project {index} of {total}"
   },
   "Team": {
     "eyebrow": "Our team",
