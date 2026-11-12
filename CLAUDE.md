@@ -84,3 +84,5 @@ scripts/figma/           pull.mjs (API, quota-aware) + inspect.mjs (offline)
 - Services dropdown + mobile menu are not designed (minimal versions implemented)
 - Persian copy review; Persian spelling of team member names
 - Desktop vs mobile logo differ in Figma (filled vs outlined) — confirm which is canonical
+- Services "Learn more" arrow buttons have no destination (decorative for now) —
+  **remind the user at the very end of the project**

@@ -33,19 +33,19 @@
     "items": {
       "ai": {
         "title": "AI & Automation",
-        "description": "Intelligent workflows and AI-powered solutions that reduce repetitive work."
+        "description": "Intelligent workflows and AI-powered\nsolutions that reduce repetitive work."
       },
       "uiux": {
         "title": "UI & UX Design",
-        "description": "Intuitive digital experiences shaped around real user needs."
+        "description": "Intuitive digital experiences shaped\naround real user needs."
       },
       "dev": {
         "title": "Web & Mobile Development",
-        "description": "Reliable, scalable applications engineered for long-term growth."
+        "description": "Reliable, scalable applications\nengineered for long-term growth."
       },
       "marketing": {
         "title": "Marketing",
-        "description": "Focused digital strategies that connect products with the right audiences."
+        "description": "Focused digital strategies that\nconnect products with the right audiences."
       }
     }
   },

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { ButtonLink } from "@/components/ui/Button";
+import { GridBackdrop } from "@/components/ui/GridBackdrop";
 
 const CLIENTS = Array.from({ length: 5 }, (_, i) => ({ id: `ted-${i}`, name: "TED" }));
 
@@ -121,8 +122,7 @@ function TrustRow({ caption, label }: { caption: string; label: string }) {
 function HeroBackground() {
   return (
     <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-      {/* Architectural grid (layer is 2×1672 wide, centered; offsets keep Figma alignment) */}
-      <div className="bg-grid absolute inset-y-0 start-1/2 w-[3344px] -translate-x-1/2 [--grid-x:14.75px] rtl:translate-x-1/2 lg:[--grid-x:80px] lg:[--grid-y:45px]" />
+      <GridBackdrop />
 
       {/* Desktop: baked ambient light + native halos, on a centered 1672px canvas */}
       <div className="absolute inset-y-0 left-1/2 hidden w-[max(100%,1672px)] -translate-x-1/2 lg:block">
