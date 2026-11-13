@@ -240,7 +240,7 @@ export function TeamCarousel() {
 
   return (
     <div
-      className="relative mt-[24px] touch-pan-y select-none lg:mt-[47px]"
+      className="relative mt-[24px] touch-pan-y select-none lg:mt-[47px] lg:flex-1 lg:flex lg:flex-col lg:justify-between lg:w-full"
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
       onMouseEnter={() => setIsPaused(true)}
@@ -357,7 +357,7 @@ export function TeamCarousel() {
         }
       `}</style>
 
-      <div className="relative grid grid-cols-1 items-end lg:grid-cols-12 lg:items-start lg:gap-x-[48px] lg:h-[720px]">
+      <div className="relative grid grid-cols-1 items-end lg:grid-cols-12 lg:items-start lg:gap-x-[48px] lg:h-full lg:flex-1">
         {/* Left Column: Details & Bio */}
         <div className="reveal relative z-10 flex flex-col items-start pb-[20px] lg:col-span-7 lg:pb-0">
           {/* Stacked grid for simultaneous text cross-transition */}
