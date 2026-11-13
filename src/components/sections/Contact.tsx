@@ -14,37 +14,21 @@ const CONTACT_CHANNELS = [
     key: "email",
     icon: MailIcon,
     href: "mailto:hello@amaj.agency",
-    color: "from-[#4b66f6] to-[#6091fa]",
-    badgeBg: "bg-[#18234d]",
-    badgeBorder: "border-[#2f3f78]",
-    iconColor: "text-[#8ea8ff]",
   },
   {
     key: "linkedin",
     icon: LinkedInIcon,
     href: "https://linkedin.com/company/amaj-agency",
-    color: "from-[#0a66c2] to-[#3b82f6]",
-    badgeBg: "bg-[#0e2448]",
-    badgeBorder: "border-[#1d4480]",
-    iconColor: "text-[#60a5fa]",
   },
   {
     key: "whatsapp",
     icon: WhatsAppIcon,
     href: "https://wa.me/989120000000",
-    color: "from-[#10b981] to-[#22c55e]",
-    badgeBg: "bg-[#0e3029]",
-    badgeBorder: "border-[#1a5948]",
-    iconColor: "text-[#25d366]",
   },
   {
     key: "telegram",
     icon: TelegramIcon,
     href: "https://t.me/amajagency",
-    color: "from-[#0284c7] to-[#38bdf8]",
-    badgeBg: "bg-[#0e2740]",
-    badgeBorder: "border-[#1c4d75]",
-    iconColor: "text-[#38bdf8]",
   },
 ] as const;
 
@@ -91,7 +75,7 @@ export async function Contact() {
 
         {/* Contact Channels Grid */}
         <div className="mt-10 sm:mt-12 lg:mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
-          {CONTACT_CHANNELS.map(({ key, icon: Icon, href, color, badgeBg, badgeBorder, iconColor }, idx) => (
+          {CONTACT_CHANNELS.map(({ key, icon: Icon, href }, idx) => (
             <a
               key={key}
               href={href}
@@ -105,15 +89,13 @@ export async function Contact() {
               {/* Top ambient highlight line on hover */}
               <span
                 aria-hidden="true"
-                className={`pointer-events-none absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r ${color} opacity-0 transition-opacity duration-300 group-hover:opacity-100`}
+                className="pointer-events-none absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-[#4b66f6] to-[#6091fa] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
               />
 
               <div className="flex items-start justify-between">
-                {/* Glowing icon badge */}
-                <div
-                  className={`flex size-13 sm:size-14 items-center justify-center rounded-[16px] border ${badgeBg} ${badgeBorder} shadow-inner transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_0_24px_rgba(97,122,245,0.35)]`}
-                >
-                  <Icon className={`h-6 w-6 ${iconColor} transition-colors duration-300 group-hover:text-white`} />
+                {/* Glowing icon badge with uniform styling */}
+                <div className="flex size-13 sm:size-14 items-center justify-center rounded-[16px] border border-[#2f3f78] bg-[#18234d] shadow-inner transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_0_24px_rgba(97,122,245,0.35)]">
+                  <Icon className="h-6 w-6 text-[#9bb0ff] transition-colors duration-300 group-hover:text-white" />
                 </div>
 
                 {/* Subtle external arrow icon */}
