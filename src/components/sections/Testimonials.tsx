@@ -38,7 +38,7 @@ export async function Testimonials() {
         className="pointer-events-none absolute top-1/3 start-0 -z-10 h-[360px] w-[360px] rounded-full bg-[#4633ff]/10 blur-[85px] lg:h-[520px] lg:w-[520px]"
       />
 
-      <div className="mx-auto max-w-[1672px] px-4 py-[70px] sm:px-6 sm:py-[85px] lg:px-[80px] lg:py-[120px] xl:px-[114px]">
+      <div className="mx-auto max-w-[1672px] px-4 pt-[48px] pb-[70px] sm:px-6 sm:py-[85px] lg:px-[80px] lg:py-[120px] xl:px-[114px]">
         <div className="grid grid-cols-1 items-center gap-y-10 lg:grid-cols-12 lg:gap-x-12">
           {/* Header Column: Title and Subtitle */}
           <header className="reveal flex flex-col items-center lg:col-span-4 lg:items-start">
