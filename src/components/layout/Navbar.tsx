@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { LogoMark, LogoOutline } from "@/components/icons/brand";
 import { ChevronDown } from "@/components/icons/ui";
@@ -21,7 +21,7 @@ const LINKS = [
 export function Navbar() {
   const t = useTranslations("Nav");
   const [open, setOpen] = useState(false);
-  const menuId = useId();
+  const menuId = "mobile-nav-menu";
 
   // Close the mobile menu on Escape or when resizing up to desktop.
   useEffect(() => {
@@ -36,6 +36,24 @@ export function Navbar() {
       mq.removeEventListener("change", onMq);
     };
   }, [open]);
+
+  // Smooth navigation handler that closes the drawer gracefully before scrolling to target
+  const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.startsWith("#")) {
+      e.preventDefault();
+      setOpen(false);
+      const targetId = href.slice(1);
+      const targetEl = document.getElementById(targetId);
+      if (targetEl) {
+        window.history.pushState(null, "", href);
+        setTimeout(() => {
+          targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 120);
+      }
+    } else {
+      setOpen(false);
+    }
+  };
 
   return (
     <header className="animate-fade fixed inset-x-0 top-6 z-50 px-6 lg:top-[21px] lg:px-10 [--delay:100ms]">
@@ -85,7 +103,12 @@ export function Navbar() {
         </ul>
 
         <div className="relative hidden items-center lg:flex">
-          <ButtonLink variant="nav" href="#contact" arrow>
+          <ButtonLink
+            variant="nav"
+            href="#contact"
+            arrow
+            onClick={(e) => handleAnchorClick(e, "#contact")}
+          >
             {t("cta")}
           </ButtonLink>
         </div>
@@ -120,29 +143,41 @@ export function Navbar() {
         </button>
       </nav>
 
-      {/* Mobile menu panel (not in Figma — styled to match the capsule) */}
+      {/* Mobile menu panel with smooth height and opacity transition */}
       <div
         id={menuId}
-        hidden={!open}
-        className="mx-auto mt-3 max-w-[1297px] rounded-[25.5px] border-[0.5px] border-[#6d7cb0]/76 bg-[#151f3e]/95 p-6 backdrop-blur-[15px] lg:hidden"
+        className={`grid transition-[grid-template-rows,opacity,margin] duration-400 ease-in-out lg:hidden ${
+          open
+            ? "grid-rows-[1fr] opacity-100 mt-3"
+            : "grid-rows-[0fr] opacity-0 mt-0 pointer-events-none"
+        }`}
       >
-        <ul className="flex flex-col gap-1">
-          {LINKS.map((link) => (
-            <li key={link.key}>
-              <a
-                href={link.href}
-                onClick={() => setOpen(false)}
-                className="block rounded-[10px] px-3 py-3 text-[17px] font-semibold text-fg transition-colors hover:bg-white/5"
+        <div className="overflow-hidden">
+          <div className="mx-auto max-w-[1297px] rounded-[25.5px] border-[0.5px] border-[#6d7cb0]/76 bg-[#151f3e]/95 p-6 backdrop-blur-[15px] shadow-2xl">
+            <ul className="flex flex-col gap-1">
+              {LINKS.map((link) => (
+                <li key={link.key}>
+                  <a
+                    href={link.href}
+                    onClick={(e) => handleAnchorClick(e, link.href)}
+                    className="block rounded-[10px] px-3 py-3 text-[17px] font-semibold text-fg transition-colors hover:bg-white/5 active:bg-white/10"
+                  >
+                    {t(link.key)}
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-4 flex items-center justify-end border-t border-[#6d7cb0]/30 pt-5">
+              <ButtonLink
+                variant="nav"
+                href="#contact"
+                arrow
+                onClick={(e) => handleAnchorClick(e, "#contact")}
               >
-                {t(link.key)}
-              </a>
-            </li>
-          ))}
-        </ul>
-        <div className="mt-4 flex items-center justify-end border-t border-[#6d7cb0]/30 pt-5">
-          <ButtonLink variant="nav" href="#contact" arrow onClick={() => setOpen(false)}>
-            {t("cta")}
-          </ButtonLink>
+                {t("cta")}
+              </ButtonLink>
+            </div>
+          </div>
         </div>
       </div>
     </header>
