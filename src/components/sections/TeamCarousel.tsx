@@ -207,9 +207,9 @@ export function TeamCarousel() {
       <div className="mt-[28px] flex items-stretch gap-[16px] lg:mt-[48px] lg:gap-[25px]">
         <span
           aria-hidden="true"
-          className="w-[6px] shrink-0 rounded-full bg-indigo lg:w-[9px]"
+          className="w-[6px] shrink-0 rounded-full bg-[#6a84ff] lg:w-[9px]"
         />
-        <p className="max-w-[620px] text-[15px] leading-[24px] font-medium text-[#f1f2fc] lg:text-[22px] lg:leading-[40px]">
+        <p className="max-w-[620px] text-[15px] leading-[24px] font-medium text-[#f1f2fc] lg:max-w-[730px] lg:text-[24px] lg:leading-[45px]">
           {t(`members.${key}.bio`)}
         </p>
       </div>
@@ -357,43 +357,39 @@ export function TeamCarousel() {
         }
       `}</style>
 
-      <div className="grid grid-cols-1 items-end lg:grid-cols-12 lg:gap-x-[48px]">
-        {/* Left Column: Details & Bio + Desktop Controls */}
-        <div className="reveal flex flex-col items-start pb-[20px] lg:col-span-7 lg:pb-[56px]">
+      <div className="relative grid grid-cols-1 items-end lg:grid-cols-12 lg:gap-x-[48px] lg:h-[720px]">
+        {/* Left Column: Details & Bio */}
+        <div className="reveal relative z-10 flex flex-col items-start pb-[20px] lg:col-span-7 lg:pb-[90px]">
           {/* Stacked grid for simultaneous text cross-transition */}
           <div className="grid grid-cols-1 grid-rows-1 w-full">
             {outgoingKey && renderTextContent(outgoingKey, true)}
             {renderTextContent(currentKey, false)}
           </div>
-
-          {/* Desktop Controls (Under the left column, matching Figma desktop) */}
-          <div className="hidden lg:flex mt-[48px] w-full max-w-[620px] justify-center">
-            {renderControls()}
-          </div>
         </div>
 
-        {/* Right Column: Watermark background + Photo + Mobile Controls */}
-        <div className="reveal relative mt-[12px] flex flex-col items-end justify-end lg:mt-0 lg:col-span-5">
-          {/* Watermark logo: on mobile positioned on the left-center so its circle sits behind the member's right arm and its apex aligns with the member's head */}
+        {/* Right Column: Watermark background + Photo */}
+        <div className="reveal relative mt-[12px] flex flex-col items-end justify-end lg:mt-0 lg:col-span-5 lg:static">
+          {/* Watermark logo: on desktop positioned behind the member right shoulder, matching Figma x:832 y:181 */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute start-[10%] sm:start-[12%] top-[65px] sm:top-[40px] -z-10 w-[54%] max-w-[215px] text-[#6078da]/25 lg:start-auto lg:end-[-40px] lg:top-[-40px] lg:w-[476px] lg:text-[#6078da]/30"
+            className="pointer-events-none absolute start-[10%] sm:start-[12%] top-[65px] sm:top-[40px] -z-10 w-[54%] max-w-[215px] text-[#6078da]/25 lg:start-auto lg:end-[8%] xl:end-[14%] lg:top-[120px] xl:top-[140px] lg:w-[476px] lg:text-[#6078da]/30"
           >
             <TeamWatermark className="h-auto w-full" />
           </div>
 
           {/* High-res member photo container with stacked grid for simultaneous opposite-direction transition */}
-          <div className="relative -mt-[25px] sm:-mt-[35px] lg:mt-0 w-[134%] max-w-none -me-[30%] sm:w-[110%] sm:-me-[8%] lg:w-full lg:max-w-[540px] xl:max-w-[600px] lg:ms-auto lg:me-0">
+          {/* On desktop: grand portrait touching bottom, matching Figma x:800 y:63 width:1034 */}
+          <div className="relative -mt-[25px] sm:-mt-[35px] w-[134%] max-w-none -me-[30%] sm:w-[110%] sm:-me-[8%] lg:mt-0 lg:w-full lg:max-w-none lg:me-0 lg:absolute lg:bottom-0 lg:end-[-40px] xl:end-0 lg:w-[58%] lg:max-w-[880px] xl:max-w-[980px] 2xl:max-w-[1034px] lg:h-full lg:flex lg:items-end lg:justify-end pointer-events-none">
             <div className="grid grid-cols-1 grid-rows-1 w-full">
               {outgoingMember && renderPhotoContent(outgoingMember, true)}
               {renderPhotoContent(currentMember, false)}
             </div>
           </div>
+        </div>
 
-          {/* Mobile Controls: clean bare indicators (NO box, NO border) centered horizontally across mobile viewport */}
-          <div className="absolute bottom-[24px] left-1/2 -translate-x-1/2 z-20 lg:hidden">
-            {renderControls()}
-          </div>
+        {/* Carousel Controls: centered horizontally across section on BOTH mobile and desktop (matching Figma x:697 y:877) */}
+        <div className="absolute bottom-[20px] lg:bottom-[10px] left-1/2 -translate-x-1/2 z-30">
+          {renderControls()}
         </div>
       </div>
     </div>
