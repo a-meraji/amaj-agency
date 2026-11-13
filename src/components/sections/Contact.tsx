@@ -6,27 +6,30 @@ import {
   LinkedInIcon,
   WhatsAppIcon,
   TelegramIcon,
-  ArrowUpRight,
 } from "@/components/icons/social";
 
 const CONTACT_CHANNELS = [
   {
     key: "email",
+    label: "Email",
     icon: MailIcon,
     href: "mailto:hello@amaj.agency",
   },
   {
     key: "linkedin",
+    label: "LinkedIn",
     icon: LinkedInIcon,
     href: "https://linkedin.com/company/amaj-agency",
   },
   {
     key: "whatsapp",
+    label: "WhatsApp",
     icon: WhatsAppIcon,
     href: "https://wa.me/989120000000",
   },
   {
     key: "telegram",
+    label: "Telegram",
     icon: TelegramIcon,
     href: "https://t.me/amajagency",
   },
@@ -51,67 +54,41 @@ export async function Contact() {
 
       <div className="mx-auto max-w-[1672px] px-6 pt-[85px] pb-[95px] lg:px-[80px] lg:pt-[110px] lg:pb-[120px] xl:px-[114px]">
         {/* Section Header */}
-        <header className="reveal flex flex-col justify-between gap-3 sm:gap-4">
-          <Eyebrow tone="periwinkle" endLine="w-[150px] lg:w-[260px]">
+        <header className="reveal flex flex-col items-center text-center">
+          <Eyebrow tone="periwinkle" startLine="w-[60px] lg:w-[120px]" endLine="w-[60px] lg:w-[120px]">
             {t("eyebrow")}
           </Eyebrow>
 
-          <h2 className="text-[34px] leading-[40px] font-normal text-white sm:text-[42px] sm:leading-[50px] lg:text-[58px] lg:leading-[68px]">
+          <h2 className="mt-3 text-[34px] leading-[40px] font-normal text-white sm:text-[42px] sm:leading-[50px] lg:text-[58px] lg:leading-[68px]">
             <span className="block sm:inline font-normal">{t("titleLight")}</span>{" "}
             <span className="font-bold text-[#628eff]">{t("titleBold")}</span>
           </h2>
 
-          {/* Subtitle with vertical accent bar */}
-          <div className="mt-1 flex items-stretch gap-2.5 sm:gap-3">
-            <span
-              aria-hidden="true"
-              className="w-[4px] shrink-0 rounded-full bg-indigo"
-            />
-            <p className="max-w-[620px] text-[14px] leading-[22px] text-[#bdc7e4] sm:text-[15px] sm:leading-[24px] lg:text-[17px] lg:leading-[27px]">
-              {t("subtitle")}
-            </p>
-          </div>
+          {/* Subtitle */}
+          <p className="mt-3 max-w-[560px] text-[14px] leading-[22px] text-[#bdc7e4] sm:text-[15px] sm:leading-[24px] lg:text-[17px] lg:leading-[27px]">
+            {t("subtitle")}
+          </p>
         </header>
 
-        {/* Contact Channels Grid */}
-        <div className="mt-10 sm:mt-12 lg:mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
-          {CONTACT_CHANNELS.map(({ key, icon: Icon, href }, idx) => (
+        {/* 4 Big Horizontal Icons in a single row on both mobile and desktop (as requested) */}
+        <div className="reveal mt-10 sm:mt-12 lg:mt-14 flex flex-row items-center justify-center gap-4 sm:gap-6 lg:gap-8">
+          {CONTACT_CHANNELS.map(({ key, label, icon: Icon, href }) => (
             <a
               key={key}
               href={href}
+              aria-label={label}
+              title={label}
               target={href.startsWith("http") ? "_blank" : undefined}
               rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-              className="reveal group relative flex flex-col justify-between overflow-hidden rounded-[20px] border border-[#232f55] bg-[#0d1633]/85 p-6 sm:p-7 shadow-xl backdrop-blur-md transition-all duration-300 hover:border-indigo/50 hover:bg-[#111c40] hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-indigo/10"
-              style={{
-                ["--reveal-start" as string]: `${10 + idx * 8}%`,
-              }}
+              className="group relative flex size-[62px] sm:size-[72px] lg:size-[80px] items-center justify-center rounded-[18px] sm:rounded-[22px] border border-[#2f3f78] bg-[#121c3b]/90 shadow-xl backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-indigo hover:bg-[#18244e] hover:shadow-[0_0_30px_rgba(97,122,245,0.45)] active:scale-95"
             >
-              {/* Top ambient highlight line on hover */}
+              {/* Top ambient highlight on hover */}
               <span
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-[#4b66f6] to-[#6091fa] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                className="pointer-events-none absolute inset-x-2 top-0 h-[2px] rounded-full bg-gradient-to-r from-[#4b66f6] to-[#6091fa] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
               />
 
-              <div className="flex items-start justify-between">
-                {/* Glowing icon badge with uniform styling */}
-                <div className="flex size-13 sm:size-14 items-center justify-center rounded-[16px] border border-[#2f3f78] bg-[#18234d] shadow-inner transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_0_24px_rgba(97,122,245,0.35)]">
-                  <Icon className="h-6 w-6 text-[#9bb0ff] transition-colors duration-300 group-hover:text-white" />
-                </div>
-
-                {/* Subtle external arrow icon */}
-                <div className="flex size-8 items-center justify-center rounded-full bg-white/5 text-[#8898cb] transition-all duration-300 group-hover:bg-white/10 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
-                  <ArrowUpRight className="h-4 w-4" />
-                </div>
-              </div>
-
-              <div className="mt-6 sm:mt-8 flex flex-col items-start">
-                <span className="text-[12px] sm:text-[13px] font-bold tracking-wider text-[#8da1db] uppercase">
-                  {t(`links.${key}.label`)}
-                </span>
-                <span className="mt-1 text-[16px] sm:text-[17px] lg:text-[18px] font-semibold text-white transition-colors duration-200 group-hover:text-[#6aa3ff] break-all">
-                  {t(`links.${key}.value`)}
-                </span>
-              </div>
+              <Icon className="size-[30px] sm:size-[34px] lg:size-[38px] text-[#9bb0ff] transition-all duration-300 group-hover:text-white group-hover:scale-110" />
             </a>
           ))}
         </div>

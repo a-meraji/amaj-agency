@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { GridBackdrop } from "@/components/ui/GridBackdrop";
 import { ArrowRightBlog, CalendarIcon, ClockIcon } from "@/components/icons/ui";
@@ -66,13 +67,13 @@ export async function Blog() {
 
             {/* View All Button */}
             <div className="shrink-0 mb-1 lg:mb-2">
-              <button
-                type="button"
+              <Link
+                href="/blogs"
                 className="inline-flex cursor-pointer items-center gap-1.5 sm:gap-2 rounded-[10px] lg:rounded-xl bg-gradient-to-r from-[#4d6bfe] to-[#45b7fe] px-3.5 py-1.5 text-[13px] sm:px-5 sm:py-2.5 sm:text-[15px] font-semibold text-white shadow-md shadow-[#4d6bfe]/25 transition-all hover:scale-[1.03] hover:shadow-[#4d6bfe]/40 active:scale-[0.98]"
               >
                 <span>{t("viewAll")}</span>
                 <ArrowRightBlog className="h-4 w-4 sm:h-5 sm:w-5" />
-              </button>
+              </Link>
             </div>
           </div>
 

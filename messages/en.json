@@ -181,5 +181,31 @@
       "team": "Team",
       "blog": "Blog"
     }
+  },
+  "BlogsPage": {
+    "eyebrow": "Amaj Blog & Insights",
+    "titleLight": "Explore Our",
+    "titleBold": "Latest Articles",
+    "subtitle": "Articles, frameworks, and practical lessons on engineering, product design, AI, and growth from the Amaj team.",
+    "allCategories": "All Categories",
+    "categories": {
+      "all": "All",
+      "product": "Product Thinking",
+      "engineering": "Engineering",
+      "design": "UI/UX Design",
+      "ai": "AI & Automation",
+      "growth": "Growth & Marketing"
+    },
+    "sort": {
+      "label": "Sort by",
+      "latest": "Latest",
+      "oldest": "Oldest",
+      "readingTime": "Shortest Read"
+    },
+    "showingCount": "Showing {count} articles",
+    "noArticles": "No articles found in this category.",
+    "minRead": "{minutes} min read",
+    "readArticle": "Read Article",
+    "backHome": "Back to Home"
   }
 }
