@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { GridBackdrop } from "@/components/ui/GridBackdrop";
+import { TeamWatermark } from "@/components/icons/brand";
 import { TeamCarousel } from "./TeamCarousel";
 
 /*
@@ -24,7 +25,15 @@ export async function Team() {
         className="pointer-events-none absolute top-1/4 end-0 -z-10 h-[380px] w-[450px] rounded-full bg-[#4633ff]/12 blur-[90px] lg:h-[550px] lg:w-[650px]"
       />
 
-      <div className="relative mx-auto flex h-full max-w-[1672px] flex-col justify-between px-6 pt-[95px] pb-0 lg:px-[114px] lg:pt-[114px] lg:pb-[32px]">
+      {/* Desktop static watermark logo: matching Figma x:832, y:181 (476x431) behind member right shoulder */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute hidden lg:block -z-10 text-[#6078da]/25 start-1/2 translate-x-[0px] rtl:-translate-x-[476px] top-[181px] w-[476px] h-[431px]"
+      >
+        <TeamWatermark className="h-full w-full" />
+      </div>
+
+      <div className="relative mx-auto flex h-full max-w-[1672px] flex-col justify-start px-6 pt-[95px] pb-0 lg:px-[114px] lg:pt-[114px] lg:pb-0">
         <header className="reveal relative z-10">
           <Eyebrow
             tone="periwinkle"

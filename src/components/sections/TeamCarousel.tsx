@@ -197,14 +197,14 @@ export function TeamCarousel() {
       </h2>
 
       {/* Role badge with gradient */}
-      <div className="mt-[18px] lg:mt-[32px]">
+      <div className="mt-[18px] lg:mt-[57px]">
         <span className="inline-flex items-center justify-center rounded-[9px] bg-gradient-to-r from-[#617af5] to-[#798aff] px-[21px] py-[6px] text-[18px] leading-[22.5px] font-bold text-white shadow-sm lg:rounded-[14px] lg:px-[28px] lg:py-[10px] lg:text-[32px] lg:leading-[37.3px]">
           {t(`members.${key}.role`)}
         </span>
       </div>
 
       {/* Quote / Bio statement block */}
-      <div className="mt-[28px] flex items-stretch gap-[16px] lg:mt-[48px] lg:gap-[25px]">
+      <div className="mt-[28px] flex items-stretch gap-[16px] lg:mt-[60px] lg:gap-[25px]">
         <span
           aria-hidden="true"
           className="w-[6px] shrink-0 rounded-full bg-[#6a84ff] lg:w-[9px]"
@@ -222,7 +222,7 @@ export function TeamCarousel() {
   ) => (
     <div
       key={isOutgoing ? `out-photo-${outgoingIndex}` : `in-photo-${displayedIndex}`}
-      className={`col-start-1 row-start-1 w-full ${getPhotoAnimationClass(
+      className={`col-start-1 row-start-1 w-full flex items-end justify-end ${getPhotoAnimationClass(
         isOutgoing
       )}`}
     >
@@ -232,15 +232,15 @@ export function TeamCarousel() {
         width={1200}
         height={1214}
         priority
-        className="h-auto w-full object-contain object-bottom drop-shadow-[0_20px_35px_rgba(0,0,0,0.5)]"
-        sizes="(max-width: 640px) 480px, (max-width: 1024px) 480px, 600px"
+        className="block h-auto w-full max-w-full lg:max-w-[1034px] object-contain object-bottom drop-shadow-[0_20px_35px_rgba(0,0,0,0.5)]"
+        sizes="(max-width: 640px) 480px, (max-width: 1024px) 768px, 1034px"
       />
     </div>
   );
 
   return (
     <div
-      className="relative mt-[24px] touch-pan-y select-none lg:mt-[36px]"
+      className="relative mt-[24px] touch-pan-y select-none lg:mt-[47px]"
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
       onMouseEnter={() => setIsPaused(true)}
@@ -357,9 +357,9 @@ export function TeamCarousel() {
         }
       `}</style>
 
-      <div className="relative grid grid-cols-1 items-end lg:grid-cols-12 lg:gap-x-[48px] lg:h-[720px]">
+      <div className="relative grid grid-cols-1 items-end lg:grid-cols-12 lg:items-start lg:gap-x-[48px] lg:h-[720px]">
         {/* Left Column: Details & Bio */}
-        <div className="reveal relative z-10 flex flex-col items-start pb-[20px] lg:col-span-7 lg:pb-[90px]">
+        <div className="reveal relative z-10 flex flex-col items-start pb-[20px] lg:col-span-7 lg:pb-0">
           {/* Stacked grid for simultaneous text cross-transition */}
           <div className="grid grid-cols-1 grid-rows-1 w-full">
             {outgoingKey && renderTextContent(outgoingKey, true)}
@@ -367,28 +367,25 @@ export function TeamCarousel() {
           </div>
         </div>
 
-        {/* Right Column: Watermark background + Photo */}
-        <div className="reveal relative mt-[12px] flex flex-col items-end justify-end lg:mt-0 lg:col-span-5 lg:static">
-          {/* Watermark logo: on desktop positioned behind the member right shoulder, matching Figma x:832 y:181 */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute start-[10%] sm:start-[12%] top-[65px] sm:top-[40px] -z-10 w-[54%] max-w-[215px] text-[#6078da]/25 lg:start-auto lg:end-[8%] xl:end-[14%] lg:top-[120px] xl:top-[140px] lg:w-[476px] lg:text-[#6078da]/30"
-          >
-            <TeamWatermark className="h-auto w-full" />
-          </div>
+        {/* Mobile watermark logo (Desktop watermark is static in Team.tsx matching Figma x:832 y:181) */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute start-[10%] sm:start-[12%] top-[65px] sm:top-[40px] -z-10 w-[54%] max-w-[215px] text-[#6078da]/25 lg:hidden"
+        >
+          <TeamWatermark className="h-auto w-full" />
+        </div>
 
-          {/* High-res member photo container with stacked grid for simultaneous opposite-direction transition */}
-          {/* On desktop: grand portrait touching bottom, matching Figma x:800 y:63 width:1034 */}
-          <div className="relative -mt-[25px] sm:-mt-[35px] w-[134%] max-w-none -me-[30%] sm:w-[110%] sm:-me-[8%] lg:mt-0 lg:w-full lg:max-w-none lg:me-0 lg:absolute lg:bottom-0 lg:end-[-40px] xl:end-0 lg:w-[58%] lg:max-w-[880px] xl:max-w-[980px] 2xl:max-w-[1034px] lg:h-full lg:flex lg:items-end lg:justify-end pointer-events-none">
-            <div className="grid grid-cols-1 grid-rows-1 w-full">
-              {outgoingMember && renderPhotoContent(outgoingMember, true)}
-              {renderPhotoContent(currentMember, false)}
-            </div>
+        {/* High-res member photo container with stacked grid for simultaneous opposite-direction transition */}
+        {/* On mobile: touching bottom flush with pb-0. On desktop: grand portrait touching bottom, matching Figma x:800 y:63 width:1034 */}
+        <div className="relative -mt-[25px] sm:-mt-[35px] w-[134%] max-w-none -me-[30%] sm:w-[110%] sm:-me-[8%] lg:mt-0 lg:w-[58%] lg:max-w-[1034px] lg:absolute lg:bottom-0 lg:end-[-114px] lg:h-full lg:flex lg:items-end lg:justify-end pointer-events-none z-10">
+          <div className="grid grid-cols-1 grid-rows-1 w-full">
+            {outgoingMember && renderPhotoContent(outgoingMember, true)}
+            {renderPhotoContent(currentMember, false)}
           </div>
         </div>
 
         {/* Carousel Controls: centered horizontally across section on BOTH mobile and desktop (matching Figma x:697 y:877) */}
-        <div className="absolute bottom-[20px] lg:bottom-[10px] left-1/2 -translate-x-1/2 z-30">
+        <div className="absolute bottom-[20px] lg:bottom-[24px] left-1/2 -translate-x-1/2 z-30">
           {renderControls()}
         </div>
       </div>
