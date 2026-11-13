@@ -108,7 +108,7 @@ function ServiceCard({
     >
       {/* Icon tile: mobile 53.5px r11 #202b49 · desktop 72px r17 #1a2033 */}
       <div className="me-[9px] flex size-[53.5px] shrink-0 items-center justify-center rounded-[11px] lg:me-[39px] bg-[#202b49] transition-colors duration-300 group-hover:bg-[#25315a] lg:size-[72px] lg:rounded-[17px] lg:bg-tile lg:group-hover:bg-[#1f2740]">
-        <Icon className="size-[32.5px] stroke-[1.9] text-[#adb7d6] transition-colors duration-300 group-hover:text-[#c9d1ee] lg:size-[44px] lg:stroke-[2.75]" />
+        <Icon className="size-[32.5px] text-[#adb7d6] transition-colors duration-300 group-hover:text-[#c9d1ee] lg:size-[44px]" />
       </div>
 
       <div className="min-w-0 flex-1">
