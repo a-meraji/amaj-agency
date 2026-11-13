@@ -1,5 +1,7 @@
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import { LogoMark } from "@/components/icons/brand";
+import { BackToTop } from "@/components/ui/BackToTop";
 
 const FOOTER_LINKS = [
   { key: "services", href: "#services" },
@@ -12,6 +14,7 @@ const FOOTER_LINKS = [
 export async function Footer() {
   const t = await getTranslations("Footer");
   const navT = await getTranslations("Nav");
+  const locale = await getLocale();
   const currentYear = 2026;
 
   return (
@@ -20,8 +23,8 @@ export async function Footer() {
         <div className="flex flex-col items-center justify-between gap-8 md:flex-row md:items-center">
           {/* Brand & Slogan */}
           <div className="flex flex-col items-center text-center md:items-start md:text-start">
-            <a
-              href="#top"
+            <Link
+              href="/"
               aria-label="Amaj Agency"
               className="flex items-center gap-3 text-white transition-opacity hover:opacity-85 focus-visible:outline-2 focus-visible:outline-periwinkle"
             >
@@ -29,7 +32,7 @@ export async function Footer() {
               <span className="text-[18px] font-bold tracking-tight text-white">
                 Amaj Agency
               </span>
-            </a>
+            </Link>
             <p className="mt-2 max-w-[340px] text-[13px] leading-[20px] text-[#8e9ecb]">
               {t("tagline")}
             </p>
@@ -37,16 +40,19 @@ export async function Footer() {
 
           {/* Quick Nav Links */}
           <ul className="flex flex-wrap items-center justify-center gap-6 text-[14px] font-medium sm:gap-8">
-            {FOOTER_LINKS.map(({ key, href }) => (
-              <li key={key}>
-                <a
-                  href={href}
-                  className="transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-periwinkle"
-                >
-                  {key === "contact" ? navT("cta") : t(`links.${key}`)}
-                </a>
-              </li>
-            ))}
+            {FOOTER_LINKS.map(({ key, href }) => {
+              const fullHref = href.startsWith("#") ? `/${locale}${href}` : href;
+              return (
+                <li key={key}>
+                  <a
+                    href={fullHref}
+                    className="transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-periwinkle"
+                  >
+                    {key === "contact" ? navT("cta") : t(`links.${key}`)}
+                  </a>
+                </li>
+              );
+            })}
           </ul>
         </div>
 
@@ -55,12 +61,7 @@ export async function Footer() {
           <p>
             © {currentYear} Amaj Agency. {t("rights")}
           </p>
-          <a
-            href="#top"
-            className="transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-periwinkle"
-          >
-            Back to top ↑
-          </a>
+          <BackToTop />
         </div>
       </div>
     </footer>

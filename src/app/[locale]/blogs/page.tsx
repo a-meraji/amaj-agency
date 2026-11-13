@@ -24,7 +24,7 @@ export default async function BlogsPage({ params }: PageProps<"/[locale]/blogs">
   return (
     <>
       <Navbar />
-      <main>
+      <main id="top">
         <BlogsListing />
       </main>
       <Footer />

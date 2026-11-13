@@ -16,7 +16,7 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
   return (
     <>
       <Navbar />
-      <main>
+      <main id="top">
         <Hero />
         <Services />
         <Work />
