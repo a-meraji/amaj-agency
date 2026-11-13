@@ -83,7 +83,12 @@
       "amin": {
         "name": "Amin Meraji",
         "role": "CEO & Founder",
-        "bio": "Leads the company vision, builds the core system architecture, and drives the technical growth of the company."
+        "bio": "Leads the company vision, builds the core system architecture, and drives the technical growth of the company. A dedicated technology strategist and systems architect committed to delivering high-impact digital solutions and scaling robust engineering teams."
+      },
+      "sepehr": {
+        "name": "Sepehr Sadeghi",
+        "role": "VP",
+        "bio": "Drives product strategy, aligns organizational goals, and oversees key operations to ensure seamless execution. Passionate about empowering teams, scaling high-impact initiatives, and delivering lasting value across all client partnerships."
       }
     }
   },

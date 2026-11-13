@@ -3,6 +3,9 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Hero } from "@/components/sections/Hero";
 import { Services } from "@/components/sections/Services";
 import { Work } from "@/components/sections/Work";
+import { Team } from "@/components/sections/Team";
+import { Testimonials } from "@/components/sections/Testimonials";
+import { Blog } from "@/components/sections/Blog";
 
 export default async function Home({ params }: PageProps<"/[locale]">) {
   const { locale } = await params;
@@ -15,6 +18,9 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
         <Hero />
         <Services />
         <Work />
+        <Team />
+        <Testimonials />
+        <Blog />
       </main>
     </>
   );

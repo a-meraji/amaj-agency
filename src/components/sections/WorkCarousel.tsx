@@ -120,17 +120,53 @@ export function WorkCarousel() {
     return () => ro.disconnect();
   }, []);
 
-  // Swipe support (pointer events, works for touch and mouse drag).
-  const startX = useRef<number | null>(null);
-  const onPointerDown = (e: React.PointerEvent) => {
-    startX.current = e.clientX;
+  // Touch & Swipe support (reliable for mobile browsers)
+  const touchStartX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null);
+  const touchMoved = useRef(false);
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+    touchMoved.current = false;
   };
-  const onPointerUp = (e: React.PointerEvent) => {
-    if (startX.current === null) return;
-    const dx = e.clientX - startX.current;
-    startX.current = null;
-    if (Math.abs(dx) < 40) return;
-    go((dx < 0 ? 1 : -1) * (rtl ? -1 : 1));
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    if (touchStartX.current === null || touchStartY.current === null) return;
+    const dx = e.touches[0].clientX - touchStartX.current;
+    if (Math.abs(dx) > 10) {
+      touchMoved.current = true;
+    }
+  };
+
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null || touchStartY.current === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    const dy = e.changedTouches[0].clientY - touchStartY.current;
+    touchStartX.current = null;
+    touchStartY.current = null;
+
+    // Horizontal swipe: threshold 22px and predominantly horizontal
+    if (Math.abs(dx) > 22 && Math.abs(dx) > Math.abs(dy) * 0.6) {
+      go((dx < 0 ? 1 : -1) * (rtl ? -1 : 1));
+    }
+    setTimeout(() => {
+      touchMoved.current = false;
+    }, 50);
+  };
+
+  // Mouse drag support for desktop
+  const mouseStartX = useRef<number | null>(null);
+  const onMouseDown = (e: React.MouseEvent) => {
+    mouseStartX.current = e.clientX;
+  };
+  const onMouseUp = (e: React.MouseEvent) => {
+    if (mouseStartX.current === null) return;
+    const dx = e.clientX - mouseStartX.current;
+    mouseStartX.current = null;
+    if (Math.abs(dx) > 40) {
+      go((dx < 0 ? 1 : -1) * (rtl ? -1 : 1));
+    }
   };
 
   const name = (key: ProjectKey) => t(`projects.${key}.name`);
@@ -154,10 +190,13 @@ export function WorkCarousel() {
 
       {/* ---------- Mobile stage ---------- */}
       <div
-        className="relative touch-pan-y select-none lg:hidden"
+        className="relative touch-pan-y select-none lg:hidden cursor-grab active:cursor-grabbing"
         style={{ height: MOBILE_CANVAS.h * scale.mobile }}
-        onPointerDown={onPointerDown}
-        onPointerUp={onPointerUp}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+        onMouseDown={onMouseDown}
+        onMouseUp={onMouseUp}
       >
         <div
           className="absolute top-0 left-1/2"
@@ -176,8 +215,12 @@ export function WorkCarousel() {
               <article
                 key={p.key}
                 aria-hidden={slot !== "center"}
-                onClick={() => slot !== "center" && setActive(i)}
-                className={slot === "center" ? "absolute" : "absolute cursor-pointer"}
+                onClick={() => {
+                  if (!touchMoved.current) {
+                    setActive(i);
+                  }
+                }}
+                className="absolute cursor-pointer"
                 style={{
                   left: box.x,
                   top: box.y,
@@ -218,10 +261,13 @@ export function WorkCarousel() {
 
       {/* ---------- Desktop stage ---------- */}
       <div
-        className="relative hidden select-none lg:block"
+        className="relative hidden select-none lg:block cursor-grab active:cursor-grabbing"
         style={{ height: DESKTOP_CANVAS.h * scale.desktop }}
-        onPointerDown={onPointerDown}
-        onPointerUp={onPointerUp}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+        onMouseDown={onMouseDown}
+        onMouseUp={onMouseUp}
       >
         <div
           className="absolute top-0 left-1/2"
@@ -279,23 +325,26 @@ export function WorkCarousel() {
       </div>
 
       {/* ---------- Navigation ---------- */}
-      <div className="mt-[38.5px] flex items-center justify-center lg:mt-[42px] lg:-translate-x-[20px] lg:rtl:translate-x-[20px]">
+      <div className="relative z-20 mt-[38.5px] flex items-center justify-center lg:mt-[42px] lg:-translate-x-[20px] lg:rtl:translate-x-[20px]">
         <NavArrow direction="prev" label={t("previous")} onClick={() => go(-1)} />
-        <ul className="mx-[20px] flex items-center lg:mx-[50px] lg:gap-[10px]">
+        <ul className="mx-[16px] flex items-center sm:mx-[24px] lg:mx-[50px] lg:gap-[10px]">
           {PROJECTS.map((p, i) => (
             <li key={p.key}>
               <button
                 type="button"
                 aria-label={t("goTo", { name: name(p.key) })}
                 aria-current={i === active}
-                onClick={() => setActive(i)}
-                className="group flex size-[22.5px] items-center justify-center rounded-full lg:size-[24px] focus-visible:outline-2 focus-visible:outline-periwinkle"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setActive(i);
+                }}
+                className="group flex min-h-[48px] min-w-[40px] cursor-pointer items-center justify-center p-2 focus-visible:outline-2 focus-visible:outline-periwinkle"
               >
                 <span
                   className={
-                    "block size-[9px] rounded-full transition-[background-color,scale] duration-500 lg:size-[14px] " +
+                    "block size-[11px] rounded-full transition-all duration-300 lg:size-[14px] " +
                     (i === active
-                      ? "scale-110 bg-[#b67cff] lg:bg-lilac"
+                      ? "scale-125 bg-[#b67cff] shadow-[0_0_12px_rgba(182,124,255,0.7)] lg:bg-lilac"
                       : "bg-[#959dc5] group-hover:bg-[#b4bbe0] lg:bg-pager")
                   }
                 />
@@ -417,8 +466,11 @@ function NavArrow({
     <button
       type="button"
       aria-label={label}
-      onClick={onClick}
-      className="group flex size-[44px] items-center justify-center rounded-full text-[#f3f5ff] transition-colors hover:bg-white/8 focus-visible:outline-2 focus-visible:outline-periwinkle lg:text-[#eef1ff]"
+      onClick={(e) => {
+        e.stopPropagation();
+        onClick();
+      }}
+      className="group flex size-[52px] min-h-[48px] min-w-[48px] cursor-pointer items-center justify-center rounded-full text-[#f3f5ff] transition-all hover:bg-white/10 active:scale-90 focus-visible:outline-2 focus-visible:outline-periwinkle lg:size-[52px] lg:text-[#eef1ff]"
     >
       <svg
         viewBox="0 0 29 29"
@@ -428,7 +480,7 @@ function NavArrow({
         strokeLinejoin="round"
         aria-hidden="true"
         className={
-          "size-[24.8px] stroke-[2.2] transition-transform duration-300 lg:size-[29px] lg:stroke-[2.1] rtl:-scale-x-100 " +
+          "size-[26px] stroke-[2.2] transition-transform duration-300 lg:size-[29px] lg:stroke-[2.1] rtl:-scale-x-100 " +
           (direction === "prev" ? "group-hover:-translate-x-1" : "group-hover:translate-x-1")
         }
       >

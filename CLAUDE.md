@@ -2,6 +2,9 @@
 
 # Amaj Agency — marketing site
 
+> [!IMPORTANT]
+> **ENGLISH ONLY:** As explicitly instructed by the user, **ONLY the English version (`/en`) is in scope**. Do not spend time developing, testing, or refining the Persian version (`/fa`). All design fidelity and responsiveness efforts apply strictly to English.
+
 Single-page Next.js site implemented **pixel-accurately** from Figma
 (file `B3iC5nfXKqOsDhrtc2UC4r`, page "Amaj Redesign"). Accuracy to the design
 is the top priority; when the design is silent or inconsistent, ask — don't guess.
