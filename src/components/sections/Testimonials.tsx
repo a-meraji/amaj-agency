@@ -54,8 +54,10 @@ export async function Testimonials() {
             <div className="mt-4 sm:mt-6 flex flex-col items-start text-start w-fit ps-[11%] sm:ps-0">
               <h2 className="text-[38px] sm:text-[44px] leading-[1.15] font-normal text-white lg:text-[54px] lg:leading-[64px] xl:text-[62px] xl:leading-[72px]">
                 <span className="block font-normal text-white">{t("titleLine1")}</span>
-                <span className="font-bold text-white">{t("titleBold")}</span>{" "}
-                <span className="font-normal text-white">{t("titleEnd")}</span>
+                <span className="inline-flex items-baseline gap-[40px] sm:gap-[48px] lg:gap-[32px]">
+                  <span className="font-bold text-white">{t("titleBold")}</span>
+                  <span className="font-normal text-white">{t("titleEnd")}</span>
+                </span>
               </h2>
 
               <p className="mt-3 sm:mt-4 max-w-[280px] sm:max-w-[340px] text-[14px] sm:text-[15px] leading-[1.45] text-[#bdc7e4] lg:max-w-[360px] lg:text-[18px] lg:leading-[28px]">
