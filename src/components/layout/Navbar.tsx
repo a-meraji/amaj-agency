@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect, useId, useState } from "react";
-import { useLocale, useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
-import type { Locale } from "@/i18n/routing";
+import { useTranslations } from "next-intl";
 import { LogoMark, LogoOutline } from "@/components/icons/brand";
 import { ChevronDown } from "@/components/icons/ui";
 import { ButtonLink } from "@/components/ui/Button";
@@ -22,10 +20,8 @@ const LINKS = [
  */
 export function Navbar() {
   const t = useTranslations("Nav");
-  const locale = useLocale() as Locale;
   const [open, setOpen] = useState(false);
   const menuId = useId();
-  const otherLocale: Locale = locale === "fa" ? "en" : "fa";
 
   // Close the mobile menu on Escape or when resizing up to desktop.
   useEffect(() => {
@@ -88,15 +84,7 @@ export function Navbar() {
           ))}
         </ul>
 
-        <div className="relative hidden items-center gap-6 lg:flex">
-          <Link
-            href="/"
-            locale={otherLocale}
-            aria-label={t("switchLanguageLabel")}
-            className="text-ui font-semibold text-[#f3f2f9]/80 transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-periwinkle"
-          >
-            {t("switchLanguage")}
-          </Link>
+        <div className="relative hidden items-center lg:flex">
           <ButtonLink variant="nav" href="#contact" arrow>
             {t("cta")}
           </ButtonLink>
@@ -151,15 +139,7 @@ export function Navbar() {
             </li>
           ))}
         </ul>
-        <div className="mt-4 flex items-center justify-between gap-4 border-t border-[#6d7cb0]/30 pt-5">
-          <Link
-            href="/"
-            locale={otherLocale}
-            aria-label={t("switchLanguageLabel")}
-            className="px-3 text-[17px] font-semibold text-fg/80 hover:text-fg"
-          >
-            {t("switchLanguage")}
-          </Link>
+        <div className="mt-4 flex items-center justify-end border-t border-[#6d7cb0]/30 pt-5">
           <ButtonLink variant="nav" href="#contact" arrow onClick={() => setOpen(false)}>
             {t("cta")}
           </ButtonLink>
