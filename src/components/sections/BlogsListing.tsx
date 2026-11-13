@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { GridBackdrop } from "@/components/ui/GridBackdrop";
@@ -113,6 +113,30 @@ export function BlogsListing() {
 
   const [activeCategory, setActiveCategory] = useState<BlogCategory>("all");
   const [sortOption, setSortOption] = useState<SortOption>("latest");
+  const [isSortOpen, setIsSortOpen] = useState(false);
+  const sortDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close custom dropdown on outside click or Escape key
+  useEffect(() => {
+    if (!isSortOpen) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        sortDropdownRef.current &&
+        !sortDropdownRef.current.contains(e.target as Node)
+      ) {
+        setIsSortOpen(false);
+      }
+    };
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsSortOpen(false);
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isSortOpen]);
 
   // Helper to resolve localized title and excerpt with fallback
   const getArticleTitle = (titleKey: string) => {
@@ -228,26 +252,89 @@ export function BlogsListing() {
               {tPage("showingCount", { count: filteredArticles.length })}
             </span>
 
-            <div className="flex items-center gap-2">
-              <label htmlFor="blog-sort" className="text-[12.5px] sm:text-[13px] text-[#8697c7] hidden sm:inline">
-                {tPage("sort.label")}:
-              </label>
-              <select
-                id="blog-sort"
-                value={sortOption}
-                onChange={(e) => setSortOption(e.target.value as SortOption)}
-                className="cursor-pointer rounded-[10px] border border-[#232f55] bg-[#111933] px-3 py-1.5 text-[12.5px] sm:text-[13.5px] font-medium text-white shadow-sm focus:border-indigo focus:outline-none"
+            {/* Custom Dark Glass Dropdown (No native OS white picker!) */}
+            <div ref={sortDropdownRef} className="relative">
+              <button
+                type="button"
+                onClick={() => setIsSortOpen((prev) => !prev)}
+                aria-haspopup="listbox"
+                aria-expanded={isSortOpen}
+                className="group flex cursor-pointer items-center gap-2 rounded-[11px] sm:rounded-xl border border-[#263560] bg-[#111936]/90 px-3.5 py-1.5 text-[12.5px] sm:text-[13.5px] font-medium text-white shadow-sm backdrop-blur-md transition-all hover:border-indigo/50 hover:bg-[#162148] active:scale-95"
               >
-                <option value="latest" className="bg-[#111933] text-white">
-                  {tPage("sort.latest")}
-                </option>
-                <option value="oldest" className="bg-[#111933] text-white">
-                  {tPage("sort.oldest")}
-                </option>
-                <option value="readingTime" className="bg-[#111933] text-white">
-                  {tPage("sort.readingTime")}
-                </option>
-              </select>
+                <span className="text-[#8697c7] hidden sm:inline">{tPage("sort.label")}:</span>
+                <span className="font-semibold text-[#f1f2fc]">
+                  {sortOption === "latest"
+                    ? tPage("sort.latest")
+                    : sortOption === "oldest"
+                    ? tPage("sort.oldest")
+                    : tPage("sort.readingTime")}
+                </span>
+                <svg
+                  className={`size-4 text-[#8697c7] transition-transform duration-200 group-hover:text-white ${
+                    isSortOpen ? "rotate-180 text-white" : ""
+                  }`}
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M5 7.5L10 12.5L15 7.5" />
+                </svg>
+              </button>
+
+              {/* Custom Dropdown Menu Panel */}
+              <div
+                role="listbox"
+                className={`absolute end-0 top-full mt-2 z-40 min-w-[170px] origin-top-right rounded-[14px] border border-[#2b3a6b] bg-[#0f1733]/95 p-1.5 shadow-2xl shadow-black/80 backdrop-blur-xl transition-all duration-200 ${
+                  isSortOpen
+                    ? "scale-100 opacity-100 pointer-events-auto"
+                    : "scale-95 opacity-0 pointer-events-none"
+                }`}
+              >
+                {(
+                  [
+                    { value: "latest", labelKey: "sort.latest" },
+                    { value: "oldest", labelKey: "sort.oldest" },
+                    { value: "readingTime", labelKey: "sort.readingTime" },
+                  ] as const
+                ).map(({ value, labelKey }) => {
+                  const isSelected = value === sortOption;
+                  return (
+                    <button
+                      key={value}
+                      type="button"
+                      role="option"
+                      aria-selected={isSelected}
+                      onClick={() => {
+                        setSortOption(value);
+                        setIsSortOpen(false);
+                      }}
+                      className={`flex w-full cursor-pointer items-center justify-between rounded-[10px] px-3 py-2 text-start text-[13px] transition-colors ${
+                        isSelected
+                          ? "bg-[#4d6bfe]/20 font-semibold text-[#6aa3ff]"
+                          : "text-[#cbd5e1] hover:bg-[#18234d] hover:text-white"
+                      }`}
+                    >
+                      <span>{tPage(labelKey)}</span>
+                      {isSelected && (
+                        <svg
+                          className="size-4 text-[#6aa3ff]"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth={2.5}
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M20 6L9 17l-5-5" />
+                        </svg>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
