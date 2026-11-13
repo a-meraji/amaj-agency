@@ -232,7 +232,7 @@ export function TeamCarousel() {
         width={1200}
         height={1214}
         priority
-        className="block h-auto w-full max-w-full lg:max-w-[1034px] object-contain object-bottom drop-shadow-[0_20px_35px_rgba(0,0,0,0.5)]"
+        className="block h-auto w-full max-w-none lg:w-[920px] xl:w-[1034px] lg:h-[940px] xl:h-[1046px] object-cover object-top drop-shadow-[0_20px_35px_rgba(0,0,0,0.5)]"
         sizes="(max-width: 640px) 480px, (max-width: 1024px) 768px, 1034px"
       />
     </div>
@@ -367,17 +367,17 @@ export function TeamCarousel() {
           </div>
         </div>
 
-        {/* Mobile watermark logo (Desktop watermark is static in Team.tsx matching Figma x:832 y:181) */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute start-[10%] sm:start-[12%] top-[65px] sm:top-[40px] -z-10 w-[54%] max-w-[215px] text-[#6078da]/25 lg:hidden"
-        >
-          <TeamWatermark className="h-auto w-full" />
-        </div>
-
         {/* High-res member photo container with stacked grid for simultaneous opposite-direction transition */}
-        {/* On mobile: touching bottom flush with pb-0. On desktop: grand portrait touching bottom, matching Figma x:800 y:63 width:1034 */}
-        <div className="relative -mt-[25px] sm:-mt-[35px] w-[134%] max-w-none -me-[30%] sm:w-[110%] sm:-me-[8%] lg:mt-0 lg:w-[58%] lg:max-w-[1034px] lg:absolute lg:bottom-0 lg:end-[-114px] lg:h-full lg:flex lg:items-end lg:justify-end pointer-events-none z-10">
+        {/* On mobile: touching bottom flush with pb-0. On desktop: grand portrait starting at y:63 width:1034 matching Figma 106:806 */}
+        <div className="relative -mt-[25px] sm:-mt-[35px] w-[134%] max-w-none -me-[30%] sm:w-[110%] sm:-me-[8%] lg:mt-0 lg:w-[920px] xl:w-[1034px] lg:h-[940px] xl:h-[1046px] lg:absolute lg:top-[-118px] lg:end-[-114px] xl:end-[-162px] pointer-events-none z-10">
+          {/* Mobile watermark logo: positioned behind member head/shoulder on mobile */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute start-[10%] sm:start-[12%] top-[65px] sm:top-[40px] -z-10 w-[54%] max-w-[215px] text-[#6078da]/25 lg:hidden"
+          >
+            <TeamWatermark className="h-auto w-full" />
+          </div>
+
           <div className="grid grid-cols-1 grid-rows-1 w-full">
             {outgoingMember && renderPhotoContent(outgoingMember, true)}
             {renderPhotoContent(currentMember, false)}
