@@ -141,17 +141,17 @@ export function TeamCarousel() {
         </div>
 
         {/* Right Column: Watermark background + Photo + Mobile Controls */}
-        <div className="reveal relative flex items-end justify-end lg:col-span-5">
-          {/* Watermark logo: on mobile positioned on the LEFT side so it is clearly visible next to the person */}
+        <div className="reveal relative mt-[12px] flex flex-col items-end justify-end lg:mt-0 lg:col-span-5">
+          {/* Watermark logo: on mobile positioned on the left-center so its circle sits behind the member's right arm and its apex aligns with the member's head */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute start-[-8px] sm:start-4 top-[30px] sm:top-[10px] -z-10 w-[260px] sm:w-[320px] text-[#6078da]/25 lg:start-auto lg:end-[-40px] lg:top-[-40px] lg:w-[476px] lg:text-[#6078da]/30"
+            className="pointer-events-none absolute start-[10%] sm:start-[12%] top-[65px] sm:top-[40px] -z-10 w-[54%] max-w-[215px] text-[#6078da]/25 lg:start-auto lg:end-[-40px] lg:top-[-40px] lg:w-[476px] lg:text-[#6078da]/30"
           >
             <TeamWatermark className="h-auto w-full" />
           </div>
 
-          {/* High-res optimized member photo (shifted to right on mobile so left watermark shows) */}
-          <div className="relative ms-auto me-[-12px] sm:me-0 w-full max-w-[340px] sm:max-w-[400px] lg:max-w-[540px] xl:max-w-[600px]">
+          {/* High-res member photo: on mobile scaled and shifted right to eliminate transparent padding and match Figma 176:907 layout */}
+          <div className="relative -mt-[25px] sm:-mt-[35px] lg:mt-0 w-[134%] max-w-none -me-[30%] sm:w-[110%] sm:-me-[8%] lg:w-full lg:max-w-[540px] xl:max-w-[600px] lg:ms-auto lg:me-0">
             <Image
               key={currentMember.key}
               src={currentMember.image}
@@ -160,13 +160,13 @@ export function TeamCarousel() {
               height={1214}
               priority
               className="h-auto w-full object-contain object-bottom drop-shadow-[0_20px_35px_rgba(0,0,0,0.5)] transition-opacity duration-300"
-              sizes="(max-width: 640px) 340px, (max-width: 1024px) 400px, 600px"
+              sizes="(max-width: 640px) 480px, (max-width: 1024px) 480px, 600px"
             />
+          </div>
 
-            {/* Mobile Controls: clean bare indicators (NO box, NO border) directly overlaid at bottom */}
-            <div className="absolute bottom-[24px] left-1/2 -translate-x-1/2 z-20 lg:hidden">
-              {renderControls()}
-            </div>
+          {/* Mobile Controls: clean bare indicators (NO box, NO border) centered horizontally across mobile viewport */}
+          <div className="absolute bottom-[24px] left-1/2 -translate-x-1/2 z-20 lg:hidden">
+            {renderControls()}
           </div>
         </div>
       </div>
