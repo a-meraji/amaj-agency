@@ -147,5 +147,39 @@
         "excerpt": "A look at the growth strategies that have helped us attract, engage, and retain the right users."
       }
     }
+  },
+  "Contact": {
+    "eyebrow": "Get in touch",
+    "titleLight": "Let's Build Something",
+    "titleBold": "Great Together",
+    "subtitle": "Have a project in mind, an idea to explore, or want to collaborate? Connect with us through any channel below.",
+    "links": {
+      "email": {
+        "label": "Email",
+        "value": "hello@amaj.agency"
+      },
+      "linkedin": {
+        "label": "LinkedIn",
+        "value": "amaj-agency"
+      },
+      "whatsapp": {
+        "label": "WhatsApp",
+        "value": "+98 912 000 0000"
+      },
+      "telegram": {
+        "label": "Telegram",
+        "value": "@amajagency"
+      }
+    }
+  },
+  "Footer": {
+    "tagline": "Engineering Purposeful Digital Solutions.",
+    "rights": "All rights reserved.",
+    "links": {
+      "services": "Services",
+      "work": "Work",
+      "team": "Team",
+      "blog": "Blog"
+    }
   }
 }
