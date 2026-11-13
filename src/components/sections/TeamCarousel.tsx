@@ -15,16 +15,17 @@ export function TeamCarousel() {
   const t = useTranslations("Team");
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const totalMembers = TEAM_MEMBERS.length;
-  const currentMember = TEAM_MEMBERS[activeIndex];
+  // Exactly 3 dots matching Figma design
+  const totalDots = 3;
+  const currentMember = TEAM_MEMBERS[activeIndex % TEAM_MEMBERS.length];
   const currentKey = currentMember.key;
 
   const handlePrev = () => {
-    setActiveIndex((prev) => (prev - 1 + totalMembers) % totalMembers);
+    setActiveIndex((prev) => (prev - 1 + totalDots) % totalDots);
   };
 
   const handleNext = () => {
-    setActiveIndex((prev) => (prev + 1) % totalMembers);
+    setActiveIndex((prev) => (prev + 1) % totalDots);
   };
 
   // Touch swipe support on mobile
@@ -52,37 +53,37 @@ export function TeamCarousel() {
     }
   };
 
-  const renderControls = (wrapperClass = "") => (
+  const renderControls = () => (
     <div
       role="group"
       aria-label={t("eyebrow")}
-      className={`flex items-center gap-[10px] sm:gap-[14px] lg:gap-[20px] ${wrapperClass}`}
+      className="flex items-center gap-[16px] lg:gap-[20px]"
     >
       <button
         type="button"
         onClick={handlePrev}
         aria-label={t("previous")}
-        className="flex size-[42px] cursor-pointer items-center justify-center rounded-full text-[#eef1ff] transition-all hover:bg-white/10 active:scale-90 focus-visible:outline-2 focus-visible:outline-periwinkle lg:size-[46px]"
+        className="flex size-[36px] cursor-pointer items-center justify-center text-[#eef1ff] transition-opacity hover:opacity-80 active:scale-90 focus-visible:outline-2 focus-visible:outline-periwinkle lg:size-[42px]"
       >
         <ArrowPrev className="h-[20px] w-[20px] lg:h-[24px] lg:w-[24px]" />
       </button>
 
-      <div className="flex items-center gap-[8px] lg:gap-[12px]">
-        {TEAM_MEMBERS.map((m, idx) => {
+      <div className="flex items-center gap-[9px] lg:gap-[12px]">
+        {Array.from({ length: totalDots }).map((_, idx) => {
           const isActive = idx === activeIndex;
           return (
             <button
-              key={m.key}
+              key={idx}
               type="button"
               onClick={() => setActiveIndex(idx)}
-              aria-label={t(`members.${m.key}.name`)}
+              aria-label={`Slide ${idx + 1}`}
               aria-current={isActive}
-              className="flex min-h-[44px] min-w-[32px] cursor-pointer items-center justify-center p-2 focus-visible:outline-none"
+              className="flex min-h-[40px] min-w-[28px] cursor-pointer items-center justify-center p-1.5 focus-visible:outline-none"
             >
               <span
                 className={`block rounded-full transition-all duration-300 ${
                   isActive
-                    ? "h-[10px] w-[10px] scale-125 bg-lilac shadow-[0_0_10px_rgba(164,117,255,0.7)] lg:h-[13px] lg:w-[13px]"
+                    ? "h-[10px] w-[10px] scale-125 bg-lilac shadow-[0_0_12px_rgba(164,117,255,0.85)] lg:h-[13px] lg:w-[13px]"
                     : "h-[8px] w-[8px] bg-pager hover:opacity-80 lg:h-[10px] lg:w-[10px]"
                 }`}
               />
@@ -95,7 +96,7 @@ export function TeamCarousel() {
         type="button"
         onClick={handleNext}
         aria-label={t("next")}
-        className="flex size-[42px] cursor-pointer items-center justify-center rounded-full text-[#eef1ff] transition-all hover:bg-white/10 active:scale-90 focus-visible:outline-2 focus-visible:outline-periwinkle lg:size-[46px]"
+        className="flex size-[36px] cursor-pointer items-center justify-center text-[#eef1ff] transition-opacity hover:opacity-80 active:scale-90 focus-visible:outline-2 focus-visible:outline-periwinkle lg:size-[42px]"
       >
         <ArrowNext className="h-[20px] w-[20px] lg:h-[24px] lg:w-[24px]" />
       </button>
@@ -133,24 +134,24 @@ export function TeamCarousel() {
             </p>
           </div>
 
-          {/* Desktop Controls (Under the left column, exactly matching Figma desktop) */}
+          {/* Desktop Controls (Under the left column, matching Figma desktop) */}
           <div className="hidden lg:flex mt-[48px] w-full max-w-[620px] justify-center">
-            {renderControls("")}
+            {renderControls()}
           </div>
         </div>
 
         {/* Right Column: Watermark background + Photo + Mobile Controls */}
-        <div className="reveal relative flex items-end justify-center lg:col-span-5 lg:justify-end">
-          {/* Watermark logo */}
+        <div className="reveal relative flex items-end justify-end lg:col-span-5">
+          {/* Watermark logo: on mobile positioned on the LEFT side so it is clearly visible next to the person */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute top-[-10px] end-[-10px] -z-10 w-[240px] text-[#6078da]/25 sm:w-[320px] lg:top-[-40px] lg:end-[-40px] lg:w-[476px] lg:text-[#6078da]/30"
+            className="pointer-events-none absolute start-[-8px] sm:start-4 top-[30px] sm:top-[10px] -z-10 w-[260px] sm:w-[320px] text-[#6078da]/25 lg:start-auto lg:end-[-40px] lg:top-[-40px] lg:w-[476px] lg:text-[#6078da]/30"
           >
             <TeamWatermark className="h-auto w-full" />
           </div>
 
-          {/* High-res optimized member photo (flush at bottom) */}
-          <div className="relative mx-auto w-full max-w-[340px] sm:max-w-[400px] lg:max-w-[540px] xl:max-w-[600px]">
+          {/* High-res optimized member photo (shifted to right on mobile so left watermark shows) */}
+          <div className="relative ms-auto me-[-12px] sm:me-0 w-full max-w-[340px] sm:max-w-[400px] lg:max-w-[540px] xl:max-w-[600px]">
             <Image
               key={currentMember.key}
               src={currentMember.image}
@@ -162,9 +163,9 @@ export function TeamCarousel() {
               sizes="(max-width: 640px) 340px, (max-width: 1024px) 400px, 600px"
             />
 
-            {/* Mobile Controls: overlaid across the bottom of the photo as in Figma mobile */}
-            <div className="absolute bottom-[16px] left-1/2 -translate-x-1/2 z-20 lg:hidden">
-              {renderControls("rounded-full border border-white/10 bg-[#09122f]/70 px-4 py-1.5 shadow-lg backdrop-blur-md")}
+            {/* Mobile Controls: clean bare indicators (NO box, NO border) directly overlaid at bottom */}
+            <div className="absolute bottom-[24px] left-1/2 -translate-x-1/2 z-20 lg:hidden">
+              {renderControls()}
             </div>
           </div>
         </div>
