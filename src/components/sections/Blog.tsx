@@ -92,13 +92,13 @@ export async function Blog() {
         <article className="reveal mt-8 sm:mt-10 lg:mt-12 overflow-hidden rounded-[20px] sm:rounded-[24px] border border-[#232f55] bg-[#0d1633]/85 p-3.5 sm:p-5 lg:p-7 shadow-2xl backdrop-blur-md transition-all duration-300 hover:border-indigo/40">
           <div className="grid grid-cols-1 items-center gap-4 sm:gap-6 lg:grid-cols-12 lg:gap-8">
             {/* Image Column */}
-            <div className="relative aspect-[631/216] sm:aspect-[16/8] lg:aspect-[634/260] w-full overflow-hidden rounded-[14px] sm:rounded-[16px] lg:col-span-6">
+            <div className="relative aspect-[16/10] sm:aspect-[16/9] lg:aspect-[634/260] w-full overflow-hidden rounded-[14px] sm:rounded-[16px] lg:col-span-6">
               <Image
                 src="/images/blog/featured.webp"
                 alt={t("posts.productThinking.title")}
                 fill
                 priority
-                className="object-cover transition-transform duration-500 hover:scale-105"
+                className="object-cover object-center transition-transform duration-500 hover:scale-105"
                 sizes="(max-width: 1024px) 100vw, 634px"
               />
             </div>
@@ -145,13 +145,13 @@ export async function Blog() {
                 ["--reveal-start" as string]: `${10 + idx * 6}%`,
               }}
             >
-              {/* Card Image: thin banner on mobile (matching Figma 176:1037), 405x126 on desktop */}
-              <div className="relative aspect-[630/120] lg:aspect-[405/126] w-full overflow-hidden rounded-[12px] sm:rounded-[14px]">
+              {/* Card Image: balanced banner on mobile, 405x126 on desktop */}
+              <div className="relative aspect-[16/9] sm:aspect-[16/9] lg:aspect-[405/126] w-full overflow-hidden rounded-[12px] sm:rounded-[14px]">
                 <Image
                   src={image}
                   alt={t(`posts.${key}.title`)}
                   fill
-                  className="object-cover transition-transform duration-500 hover:scale-105"
+                  className="object-cover object-center transition-transform duration-500 hover:scale-105"
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 405px"
                 />
               </div>
