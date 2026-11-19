@@ -77,7 +77,7 @@ const ARTICLES: Article[] = [
     category: "ai",
     categoryKey: "ai",
     tagColor: "from-[#ec4899] to-[#f472b6]",
-    image: "/images/blog/featured.webp",
+    image: "/images/blog/ai.webp",
     titleKey: "ai.title",
     excerptKey: "ai.excerpt",
     dateStr: "Jan 05, 2025",
@@ -89,7 +89,7 @@ const ARTICLES: Article[] = [
     category: "engineering",
     categoryKey: "engineering",
     tagColor: "from-[#10b981] to-[#34d399]",
-    image: "/images/blog/engineering.webp",
+    image: "/images/blog/frontend.webp",
     titleKey: "frontend.title",
     excerptKey: "frontend.excerpt",
     dateStr: "Dec 28, 2024",
@@ -187,7 +187,7 @@ export function BlogsListing() {
   }, [activeCategory, sortOption]);
 
   return (
-    <section className="relative isolate min-h-screen overflow-hidden bg-ink-950 pt-[120px] pb-[130px] lg:pt-[150px] lg:pb-[160px]">
+    <section className="relative isolate min-h-screen overflow-hidden bg-ink-950 px-6 pt-[120px] pb-[130px] lg:px-10 lg:pt-[150px] lg:pb-[160px]">
       <GridBackdrop className="-z-10" />
 
       {/* Ambient background glows */}
@@ -200,7 +200,7 @@ export function BlogsListing() {
         className="pointer-events-none absolute bottom-1/3 end-10 -z-10 h-[450px] w-[550px] rounded-full bg-[#3561ff]/10 blur-[110px]"
       />
 
-      <div className="mx-auto max-w-[1672px] px-6 lg:px-[80px] xl:px-[114px]">
+      <div className="mx-auto max-w-[1297px]">
         {/* Minimalist Header */}
         <header className="flex flex-col items-center text-center">
           <Eyebrow tone="periwinkle" startLine="w-[60px] lg:w-[120px]" endLine="w-[60px] lg:w-[120px]">

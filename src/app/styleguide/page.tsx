@@ -1,13 +1,8 @@
 import { notFound } from "next/navigation";
-import { setRequestLocale } from "next-intl/server";
 
 // Development-only reference sheet for the design tokens in globals.css.
-export default async function Styleguide({
-  params,
-}: PageProps<"/[locale]/styleguide">) {
+export default function Styleguide() {
   if (process.env.NODE_ENV === "production") notFound();
-  const { locale } = await params;
-  setRequestLocale(locale);
 
   return (
     <main className="mx-auto max-w-6xl space-y-16 px-6 py-12">
@@ -58,69 +53,41 @@ export default async function Styleguide({
         />
         <div className="mt-6 grid gap-4 sm:grid-cols-3">
           <Gradient className="bg-gradient-primary" label="gradient-primary" />
-          <Gradient
-            className="bg-[linear-gradient(90deg,#ff6a00_0%,#ff974d_38%,#ffd2b2_100%)]"
-            label="sunset (hero headline)"
-          />
-          <Gradient
-            className="bg-[linear-gradient(90deg,#6f8eff,#6984ff)]"
-            label="indigo (“Blogs”)"
-          />
+          <Gradient className="bg-seam-bottom" label="seam-bottom (services → work)" />
         </div>
       </Section>
 
-      <Section title="Lines">
-        <div className="grid gap-4 sm:grid-cols-5">
-          {[
-            ["line-subtle", "border-line-subtle"],
-            ["line", "border-line"],
-            ["line-strong", "border-line-strong"],
-            ["divider", "border-divider"],
-            ["grid", "border-grid"],
-          ].map(([name, cls]) => (
-            <div key={name} className={`rounded-sm border-2 ${cls} bg-ink-900 p-4`}>
-              <code className="text-meta text-fg-soft">{name}</code>
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      <Section title="Typography (desktop → mobile)">
-        <div className="space-y-6 rounded-lg bg-ink-900 p-8">
-          <TypeRow token="display-light + display" spec="67/400 + 72/700 → 33.5 + 36">
-            <span className="text-display-light">Products That </span>
-            <span className="text-display font-bold">Deliver</span>
+      <Section title="Typography (Quicksand)">
+        <div className="space-y-6">
+          <TypeRow token="display" spec="72/1.08, bold → 36/1.25">
+            <span className="text-display font-bold">Amaj</span>
           </TypeRow>
-          <TypeRow token="display (sunset)" spec="67/700 → 38">
-            <span className="text-display-light font-bold text-gradient-sunset">
-              Digital Solutions
-            </span>
+          <TypeRow token="display-light" spec="67/1.08, light → 36/1.25">
+            <span className="text-display-light font-light">Digital Product</span>
           </TypeRow>
-          <TypeRow token="h2" spec="36/700 → 17">
-            <span className="text-h2 font-bold">From Ideas to Impact</span>
+          <TypeRow token="h2" spec="36/1.17, bold → 22/1.3">
+            <span className="text-h2 font-bold">Engineering Insights</span>
           </TypeRow>
-          <TypeRow token="h3" spec="24/700 → 12–13">
-            <span className="text-h3 font-bold">A Practical Guide to Better UX</span>
+          <TypeRow token="h3" spec="24/1.17, bold → 16/1.3">
+            <span className="text-h3 font-bold">Featured Article Title</span>
           </TypeRow>
-          <TypeRow token="h4" spec="20/700 → 15">
-            <span className="text-h4 font-bold">AI &amp; Automation</span>
+          <TypeRow token="h4" spec="20/1.4, bold → 17/1.35">
+            <span className="text-h4 font-bold">Mobile App Development</span>
           </TypeRow>
-          <TypeRow token="eyebrow" spec="24/700, tracking 0.16em → 10–12">
-            <span className="text-eyebrow font-bold uppercase tracking-eyebrow text-periwinkle">
-              What we do
-            </span>
+          <TypeRow token="eyebrow" spec="24/1.1, regular, tracking 0.16em → 15.5">
+            <span className="text-eyebrow tracking-eyebrow text-periwinkle">SERVICES</span>
           </TypeRow>
-          <TypeRow token="lead" spec="24/400 → 14.5–17">
+          <TypeRow token="lead" spec="24/1.33, regular → 14.5/1.55">
             <span className="text-lead text-fg-muted">
-              A multidisciplinary team for building, growing, and automating.
+              We engineer scalable software and digital products.
             </span>
           </TypeRow>
-          <TypeRow token="body-lg" spec="20/400 → 12">
-            <span className="text-body-lg text-fg-soft">Business Owner, DrWatch</span>
+          <TypeRow token="body-lg" spec="20/1.3, bold/regular → 14/1.4">
+            <span className="text-body-lg font-bold">Highlighted text block</span>
           </TypeRow>
-          <TypeRow token="body" spec="16.5/400 → 12">
-            <span className="text-body text-fg-muted">
-              Intelligent workflows and AI-powered solutions.
+          <TypeRow token="body" spec="16.5/1.45, regular → 13/1.4">
+            <span className="text-body text-fg-soft">
+              Body paragraph copy across service descriptions and cards.
             </span>
           </TypeRow>
           <TypeRow token="ui" spec="17/600 → 17.5–18.5/700">
@@ -132,11 +99,6 @@ export default async function Styleguide({
           <TypeRow token="overline" spec="13/500, tracking 0.28em → 10.5">
             <span className="text-overline font-medium uppercase tracking-overline text-fg-muted">
               Trusted by leading teams
-            </span>
-          </TypeRow>
-          <TypeRow token="Persian (Vazirmatn)" spec="same scale">
-            <span className="text-display-light font-bold" dir="rtl">
-              راهکارهای دیجیتال
             </span>
           </TypeRow>
         </div>

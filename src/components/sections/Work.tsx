@@ -13,10 +13,10 @@ export async function Work() {
   const t = await getTranslations("Work");
 
   return (
-    <section id="work" className="relative isolate overflow-hidden bg-ink-900">
+    <section id="work" className="relative isolate overflow-hidden bg-[#09122f] lg:bg-transparent">
       <WorkBackground />
 
-      <div className="relative pt-[124px] pb-[150px] lg:pt-[58px] lg:pb-[98px]">
+      <div className="relative pt-[124px] pb-[130px] lg:pt-[58px] lg:pb-[160px]">
         <header className="reveal flex flex-col items-center px-6 text-center">
           <Eyebrow tone="light" startLine="w-[73px] lg:w-[97px]" endLine="w-[73px] lg:w-[97px]">
             {t("eyebrow")}
@@ -46,24 +46,75 @@ export async function Work() {
 
 function WorkBackground() {
   return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-      {/* Mobile: grid + three blurred atmospheric lights (frame y − 31px) */}
-      <div className="lg:hidden">
-        <GridBackdrop />
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+      {/* Mobile: Native glowing atmospheric fields (grid is provided continuously by parent content-canvas) */}
+      <div className="absolute inset-0 lg:hidden">
         <div className="absolute inset-y-0 left-1/2 w-[426.5px] -translate-x-1/2">
-          <span className="animate-drift absolute top-[151px] left-[21px] h-[250px] w-[145px] rounded-full bg-[#6c2bfb]/20 blur-[55px] [--duration:18s]" />
-          <span className="animate-drift absolute top-[214px] left-[305px] h-[270px] w-[125px] rounded-full bg-[#1973d9]/15 blur-[65px] [--delay:-7s] [--duration:22s]" />
-          {/* Figma stacks this ellipse twice (16% each) */}
-          <span className="absolute top-[644px] left-[57.5px] h-[150px] w-[305px] rounded-full bg-[#5426bd]/30 blur-[65px]" />
+          {/* Left vibrant rich violet/purple glow */}
+          <span
+            className="animate-work-glow-left absolute top-[90px] -left-[50px] h-[440px] w-[360px] rounded-full bg-[#872bfb]/46 blur-[85px]"
+            style={{ willChange: "transform, opacity" }}
+          />
+          {/* Left companion deep purple aura */}
+          <span
+            className="animate-work-glow-left absolute top-[170px] left-[30px] h-[380px] w-[310px] rounded-full bg-[#6c1ce8]/44 blur-[75px] [animation-delay:-3s]"
+            style={{ willChange: "transform, opacity" }}
+          />
+          {/* Right azure/royal blue glow */}
+          <span
+            className="animate-work-glow-right absolute top-[120px] right-[0px] h-[430px] w-[340px] rounded-full bg-[#186ef9]/40 blur-[85px]"
+            style={{ willChange: "transform, opacity" }}
+          />
+          {/* Right deep sapphire companion */}
+          <span
+            className="animate-work-glow-right absolute top-[200px] right-[30px] h-[350px] w-[290px] rounded-full bg-[#1442e6]/42 blur-[75px] [animation-delay:-3.5s]"
+            style={{ willChange: "transform, opacity" }}
+          />
+          {/* Bottom subtle violet glow behind active card */}
+          <span
+            className="animate-work-glow-center absolute top-[420px] left-1/2 h-[290px] w-[440px] rounded-full bg-[#7924fa]/42 blur-[75px]"
+            style={{ willChange: "transform, opacity" }}
+          />
         </div>
       </div>
 
-      {/* Desktop: baked ambient field, stretched to the full width */}
-      <div className="absolute inset-y-0 left-1/2 hidden w-[max(100%,1672px)] -translate-x-1/2 lg:block">
-        <Image src="/images/work/ambient.webp" alt="" fill sizes="100vw" className="object-cover" />
-        {/* Seamless transition from Services (#171b3d → transparent, 380px) */}
-        <span className="absolute inset-x-0 top-0 h-[380px] bg-[linear-gradient(180deg,#171b3d_0%,rgb(23_27_61/0.98)_16%,rgb(23_27_61/0.75)_42%,rgb(23_27_61/0.27)_72%,rgb(23_27_61/0)_100%)]" />
+      {/* Desktop: High-resolution native lighting fields */}
+      <div className="absolute inset-0 hidden lg:block [mask-image:linear-gradient(to_bottom,black_75%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_75%,transparent_100%)]">
+        {/* Centered 1672px atmospheric canvas with dynamic organic floating motion */}
+        <div className="absolute inset-y-0 left-1/2 w-[1672px] -translate-x-1/2">
+          {/* Left primary rich vibrant violet/purple glow */}
+          <span
+            className="animate-work-glow-left absolute top-[100px] left-[20px] h-[700px] w-[820px] rounded-full bg-[#8224f8]/44 blur-[125px]"
+            style={{ willChange: "transform, opacity" }}
+          />
+          {/* Left deep purple companion aura */}
+          <span
+            className="animate-work-glow-left absolute top-[190px] left-[200px] h-[600px] w-[700px] rounded-full bg-[#641eed]/42 blur-[115px] [animation-delay:-3s]"
+            style={{ willChange: "transform, opacity" }}
+          />
+          {/* Right primary azure/royal blue glow */}
+          <span
+            className="animate-work-glow-right absolute top-[140px] left-[920px] h-[700px] w-[800px] rounded-full bg-[#1a5eff]/38 blur-[125px]"
+            style={{ willChange: "transform, opacity" }}
+          />
+          {/* Right deep sapphire companion aura */}
+          <span
+            className="animate-work-glow-right absolute top-[240px] left-[1040px] h-[580px] w-[660px] rounded-full bg-[#1034b8]/38 blur-[115px] [animation-delay:-3.5s]"
+            style={{ willChange: "transform, opacity" }}
+          />
+          {/* Bottom-center subtle violet glow behind active card */}
+          <span
+            className="animate-work-glow-center absolute top-[490px] left-1/2 h-[380px] w-[760px] rounded-full bg-[#6e22f5]/40 blur-[110px]"
+            style={{ willChange: "transform, opacity" }}
+          />
+        </div>
       </div>
+
+      {/* Seamless top transition from Services (#171b3d → transparent) */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[180px] lg:h-[380px] bg-seam-top"
+      />
     </div>
   );
 }

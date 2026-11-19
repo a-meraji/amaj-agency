@@ -7,6 +7,30 @@ const nextConfig: NextConfig = {
   allowedDevOrigins: ["89.106.206.143", "localhost", "127.0.0.1"],
   cacheComponents: true,
   partialPrefetching: true,
+  async redirects() {
+    return [
+      {
+        source: "/en",
+        destination: "/",
+        permanent: false,
+      },
+      {
+        source: "/en/:path*",
+        destination: "/:path*",
+        permanent: false,
+      },
+      {
+        source: "/fa",
+        destination: "/",
+        permanent: false,
+      },
+      {
+        source: "/fa/:path*",
+        destination: "/:path*",
+        permanent: false,
+      },
+    ];
+  },
   turbopack: {
     rules: {
       "*.css": {

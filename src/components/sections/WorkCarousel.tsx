@@ -2,83 +2,140 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 
-type ProjectKey = "finly" | "nexora" | "medico";
-type Slot = "left" | "center" | "right";
+export type ProjectKey = "mimmo" | "bluerehab" | "rahino" | "audiolog";
+type Slot = "left" | "center" | "right" | "back";
 
-const PROJECTS: { key: ProjectKey; card: string; thumb: string }[] = [
-  { key: "finly", card: "/images/work/finly-card.webp", thumb: "/images/work/finly.webp" },
-  { key: "nexora", card: "/images/work/nexora-card.webp", thumb: "/images/work/nexora.webp" },
-  { key: "medico", card: "/images/work/medico-card.webp", thumb: "/images/work/medico.webp" },
+export const PROJECTS: { key: ProjectKey; url: string; thumb: string }[] = [
+  { key: "mimmo", url: "https://mimmoacademy.com/", thumb: "/images/work/mimmo-academy.png" },
+  { key: "bluerehab", url: "https://bluerehab.ir/", thumb: "/images/work/bluerehab-home.png" },
+  { key: "rahino", url: "https://botaava.ir/", thumb: "/images/work/rahino.png" },
+  { key: "audiolog", url: "https://app.audiolog.ir/plans", thumb: "/images/work/audiolog.png" },
 ];
 
 /* ------------------------------------------------------------------------- */
-/* Slot geometry, straight from Figma (frame coordinates, stage top = 0).     */
+/* Slot geometry & styling specifications                                    */
 /* ------------------------------------------------------------------------- */
 
 type Box = { x: number; y: number; w: number; h: number };
-type SlotSpec = {
+
+type DesktopSlotSpec = {
   card: Box;
   z: number;
+  radius: number;
+  bg: string;
+  border: string;
+  image: Box;
+  imageRadius: number;
   title: { x: number; y: number };
   desc?: { x: number; y: number };
   button?: { x: number; y: number; size: number };
 };
 
-/** Desktop "03 / Portfolio carousel" (57:289) — 1672px canvas, stage top = y 258. */
-const DESKTOP: Record<Slot, SlotSpec> = {
-  left: { card: { x: 289, y: 62, w: 267, h: 385 }, z: 1, title: { x: 18, y: 309 } },
+const DESKTOP: Record<Slot, DesktopSlotSpec> = {
+  left: {
+    card: { x: 289, y: 62, w: 267, h: 385 },
+    z: 1,
+    radius: 22,
+    bg: "linear-gradient(160deg, #22184e 0%, #140f31 100%)",
+    border: "rgba(160, 140, 240, 0.28)",
+    image: { x: 12, y: 12, w: 243, h: 280 },
+    imageRadius: 16,
+    title: { x: 20, y: 312 },
+  },
   center: {
     card: { x: 538, y: 0, w: 552, h: 499 },
     z: 3,
-    title: { x: 40, y: 371 },
-    desc: { x: 40, y: 410 },
-    button: { x: 454, y: 399, size: 53 },
+    radius: 28,
+    bg: "linear-gradient(165deg, #2e216e 0%, #191444 65%, #100d2e 100%)",
+    border: "rgba(180, 160, 255, 0.5)",
+    image: { x: 18, y: 18, w: 516, h: 335 },
+    imageRadius: 20,
+    title: { x: 32, y: 374 },
+    desc: { x: 32, y: 418 },
+    button: { x: 462, y: 405, size: 52 },
   },
   right: {
     card: { x: 1041, y: 54, w: 290, h: 390 },
     z: 2,
-    title: { x: 86, y: 303 },
-    button: { x: 238, y: 315, size: 51 },
+    radius: 22,
+    bg: "linear-gradient(160deg, #261d56 0%, #151136 100%)",
+    border: "rgba(160, 140, 240, 0.3)",
+    image: { x: 12, y: 12, w: 266, h: 285 },
+    imageRadius: 16,
+    title: { x: 24, y: 315 },
+    button: { x: 226, y: 318, size: 48 },
+  },
+  back: {
+    card: { x: 736, y: 70, w: 200, h: 320 },
+    z: 0,
+    radius: 18,
+    bg: "linear-gradient(160deg, #18113a 0%, #0d0a22 100%)",
+    border: "rgba(120, 100, 200, 0.15)",
+    image: { x: 10, y: 10, w: 180, h: 220 },
+    imageRadius: 14,
+    title: { x: 16, y: 250 },
   },
 };
 const DESKTOP_CANVAS = { w: 1672, h: 499, contentX: 289, contentW: 1042 };
 
 /** Mobile (176:833 ÷ 2) — 426.5px canvas, stage top = y 407. */
-type MobileSlot = SlotSpec & { image: Box; radius: number; imageRadius: string; bg: string; border: string };
+type MobileSlot = {
+  card: Box;
+  z: number;
+  radius: number;
+  bg: string;
+  border: string;
+  image: Box;
+  imageRadius: number;
+  title: { x: number; y: number };
+  desc?: { x: number; y: number };
+  button?: { x: number; y: number; size: number };
+};
+
 const MOBILE: Record<Slot, MobileSlot> = {
   left: {
     card: { x: 9.5, y: 24.5, w: 118, h: 213 },
     z: 1,
-    radius: 21,
-    bg: "#3a246f",
-    border: "rgb(170 141 252 / 0.9)",
-    image: { x: 13, y: 15, w: 87, h: 147 },
-    imageRadius: "19px",
-    title: { x: 13, y: 171 },
+    radius: 18,
+    bg: "#321f61",
+    border: "rgb(170 141 252 / 0.7)",
+    image: { x: 8, y: 8, w: 102, h: 145 },
+    imageRadius: 14,
+    title: { x: 10, y: 168 },
   },
   center: {
     card: { x: 94, y: 0, w: 227.5, h: 282.5 },
     z: 3,
-    radius: 27,
-    bg: "#312778",
+    radius: 24,
+    bg: "#2b1f68",
     border: "#ab96f9",
-    image: { x: 1, y: 0, w: 226.5, h: 193 },
-    imageRadius: "22px 22px 0 0",
-    title: { x: 13, y: 193.5 },
-    desc: { x: 13, y: 221.5 },
-    button: { x: 183.5, y: 213, size: 30 },
+    image: { x: 8, y: 8, w: 211.5, h: 178 },
+    imageRadius: 18,
+    title: { x: 12, y: 198 },
+    desc: { x: 12, y: 224 },
+    button: { x: 183.5, y: 220, size: 32 },
   },
   right: {
     card: { x: 302, y: 27, w: 104.5, h: 209 },
     z: 2,
-    radius: 21,
-    bg: "#3e388e",
-    border: "rgb(170 167 255 / 0.85)",
-    image: { x: 5.5, y: 20, w: 83.5, h: 147.5 },
-    imageRadius: "15px",
-    title: { x: 26.5, y: 170 },
+    radius: 18,
+    bg: "#362e78",
+    border: "rgb(170 167 255 / 0.7)",
+    image: { x: 8, y: 8, w: 88.5, h: 145 },
+    imageRadius: 14,
+    title: { x: 12, y: 168 },
+  },
+  back: {
+    card: { x: 173, y: 35, w: 80, h: 160 },
+    z: 0,
+    radius: 14,
+    bg: "#201440",
+    border: "rgb(130 100 200 / 0.3)",
+    image: { x: 6, y: 6, w: 68, h: 110 },
+    imageRadius: 10,
+    title: { x: 8, y: 125 },
   },
 };
 const MOBILE_CANVAS = { w: 426.5, h: 282.5 };
@@ -88,22 +145,33 @@ const DURATION = 750;
 const transition = (props: string[]) =>
   props.map((p) => `${p} ${DURATION}ms ${EASE}`).join(", ");
 
-/** Slot for project i when `active` is the featured index (Figma order: left, center, right). */
 function slotFor(i: number, active: number, total: number): Slot {
   const offset = (i - active + total) % total;
-  return offset === 0 ? "center" : offset === 1 ? "right" : "left";
+  if (offset === 0) return "center";
+  if (offset === 1) return "right";
+  if (offset === total - 1) return "left";
+  return "back";
 }
 
 /* ------------------------------------------------------------------------- */
 
 export function WorkCarousel() {
   const t = useTranslations("Work");
-  const rtl = useLocale() === "fa";
-  const [active, setActive] = useState(1); // Nexora featured, as designed
+  const [active, setActive] = useState(0); // Start with Mimmo Academy
   const total = PROJECTS.length;
   const go = useCallback((delta: number) => setActive((a) => (a + delta + total) % total), [total]);
 
-  // Scale the fixed-geometry stages to the available width (never above 1:1).
+  // Infinite loop auto-advance every 3 seconds
+  const [isHovered, setIsHovered] = useState(false);
+  useEffect(() => {
+    if (isHovered) return;
+    const interval = setInterval(() => {
+      go(1);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [go, isHovered]);
+
+  // Scale fixed geometry to available container width
   const rootRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState({ desktop: 1, mobile: 1 });
   useEffect(() => {
@@ -120,7 +188,7 @@ export function WorkCarousel() {
     return () => ro.disconnect();
   }, []);
 
-  // Touch & Swipe support (reliable for mobile browsers)
+  // Touch & Swipe support
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
   const touchMoved = useRef(false);
@@ -134,9 +202,7 @@ export function WorkCarousel() {
   const onTouchMove = (e: React.TouchEvent) => {
     if (touchStartX.current === null || touchStartY.current === null) return;
     const dx = e.touches[0].clientX - touchStartX.current;
-    if (Math.abs(dx) > 10) {
-      touchMoved.current = true;
-    }
+    if (Math.abs(dx) > 10) touchMoved.current = true;
   };
 
   const onTouchEnd = (e: React.TouchEvent) => {
@@ -146,16 +212,15 @@ export function WorkCarousel() {
     touchStartX.current = null;
     touchStartY.current = null;
 
-    // Horizontal swipe: threshold 22px and predominantly horizontal
     if (Math.abs(dx) > 22 && Math.abs(dx) > Math.abs(dy) * 0.6) {
-      go((dx < 0 ? 1 : -1) * (rtl ? -1 : 1));
+      go(dx < 0 ? 1 : -1);
     }
     setTimeout(() => {
       touchMoved.current = false;
     }, 50);
   };
 
-  // Mouse drag support for desktop
+  // Mouse drag support
   const mouseStartX = useRef<number | null>(null);
   const onMouseDown = (e: React.MouseEvent) => {
     mouseStartX.current = e.clientX;
@@ -165,7 +230,7 @@ export function WorkCarousel() {
     const dx = e.clientX - mouseStartX.current;
     mouseStartX.current = null;
     if (Math.abs(dx) > 40) {
-      go((dx < 0 ? 1 : -1) * (rtl ? -1 : 1));
+      go(dx < 0 ? 1 : -1);
     }
   };
 
@@ -179,9 +244,11 @@ export function WorkCarousel() {
       aria-roledescription="carousel"
       aria-label={t("carouselLabel")}
       className="relative"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       onKeyDown={(e) => {
-        if (e.key === "ArrowRight") go(rtl ? -1 : 1);
-        if (e.key === "ArrowLeft") go(rtl ? 1 : -1);
+        if (e.key === "ArrowRight") go(1);
+        if (e.key === "ArrowLeft") go(-1);
       }}
     >
       <p aria-live="polite" className="sr-only">
@@ -210,48 +277,83 @@ export function WorkCarousel() {
           {PROJECTS.map((p, i) => {
             const slot = slotFor(i, active, total);
             const s = MOBILE[slot];
-            const box = mirror(s.card, MOBILE_CANVAS.w, rtl);
+            const isCenter = slot === "center";
+
+            const isVisualLeft = slot === "left";
+            const isVisualRight = slot === "right";
+            const mobileTransform = isCenter
+              ? "perspective(600px) rotateY(0deg)"
+              : isVisualLeft
+              ? "perspective(600px) rotateY(12deg)"
+              : isVisualRight
+              ? "perspective(600px) rotateY(-12deg)"
+              : "perspective(600px) rotateY(0deg) scale(0.85)";
+
             return (
               <article
                 key={p.key}
-                aria-hidden={slot !== "center"}
+                aria-hidden={!isCenter}
                 onClick={() => {
-                  if (!touchMoved.current) {
+                  if (touchMoved.current) return;
+                  if (isCenter) {
+                    window.open(p.url, "_blank", "noopener,noreferrer");
+                  } else {
                     setActive(i);
                   }
                 }}
-                className="absolute cursor-pointer"
+                className={`absolute cursor-pointer overflow-hidden transition-all ${
+                  isCenter
+                    ? "shadow-[0_14px_30px_-8px_rgba(0,0,0,0.38)]"
+                    : "shadow-[0_10px_22px_-8px_rgba(0,0,0,0.25)]"
+                }`}
                 style={{
-                  left: box.x,
-                  top: box.y,
-                  width: box.w,
-                  height: box.h,
+                  left: s.card.x,
+                  top: s.card.y,
+                  width: s.card.w,
+                  height: s.card.h,
                   zIndex: s.z,
+                  transform: mobileTransform,
+                  transformOrigin: "center center",
                   borderRadius: s.radius,
                   background: s.bg,
-                  border: `0.5px solid ${s.border}`,
-                  transition: transition(["left", "top", "width", "height", "border-radius", "background-color", "border-color", "z-index"]),
+                  border: `1px solid ${s.border}`,
+                  opacity: slot === "back" ? 0 : 1,
+                  pointerEvents: slot === "back" ? "none" : "auto",
+                  transition: transition(["left", "top", "width", "height", "border-radius", "background-color", "border-color", "z-index", "filter", "opacity", "transform", "box-shadow"]),
+                  filter: isCenter ? "none" : "brightness(0.85)",
                 }}
               >
+                {/* Curved Thumbnail Preview */}
                 <div
-                  className="absolute overflow-hidden"
+                  className="absolute overflow-hidden border border-white/10"
                   style={{
-                    ...pos(s.image, rtl),
+                    left: s.image.x,
+                    top: s.image.y,
                     width: s.image.w,
                     height: s.image.h,
                     borderRadius: s.imageRadius,
-                    transition: transition(["left", "right", "top", "width", "height", "border-radius"]),
+                    transition: transition(["left", "top", "width", "height", "border-radius"]),
                   }}
                 >
-                  <Image src={p.thumb} alt="" fill sizes="227px" className="object-cover" draggable={false} />
+                  <Image
+                    src={p.thumb}
+                    alt={name(p.key)}
+                    fill
+                    sizes="227px"
+                    className="object-cover object-top"
+                    draggable={false}
+                  />
                 </div>
+
                 <CardText
                   slot={slot}
-                  spec={s}
-                  rtl={rtl}
                   title={name(p.key)}
                   description={t(`projects.${p.key}.description`)}
+                  url={p.url}
                   variant="mobile"
+                  specTitle={s.title}
+                  specDesc={s.desc}
+                  specBtn={s.button}
                 />
               </article>
             );
@@ -261,7 +363,7 @@ export function WorkCarousel() {
 
       {/* ---------- Desktop stage ---------- */}
       <div
-        className="relative hidden select-none lg:block cursor-grab active:cursor-grabbing"
+        className="relative hidden select-none lg:block"
         style={{ height: DESKTOP_CANVAS.h * scale.desktop }}
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
@@ -281,42 +383,85 @@ export function WorkCarousel() {
           {PROJECTS.map((p, i) => {
             const slot = slotFor(i, active, total);
             const s = DESKTOP[slot];
-            const box = mirror(s.card, DESKTOP_CANVAS.w, rtl);
+            const isCenter = slot === "center";
+
+            const isVisualLeft = slot === "left";
+            const isVisualRight = slot === "right";
+            const desktopTransform = isCenter
+              ? "perspective(1100px) rotateY(0deg)"
+              : isVisualLeft
+              ? "perspective(1100px) rotateY(16deg)"
+              : isVisualRight
+              ? "perspective(1100px) rotateY(-16deg)"
+              : "perspective(1100px) rotateY(0deg) scale(0.85)";
+
             return (
               <article
                 key={p.key}
-                aria-hidden={slot !== "center"}
-                onClick={() => slot !== "center" && setActive(i)}
-                className={
-                  "group absolute " +
-                  (slot === "center" ? "" : "cursor-pointer")
-                }
+                aria-hidden={!isCenter}
+                onClick={() => {
+                  if (isCenter) {
+                    window.open(p.url, "_blank", "noopener,noreferrer");
+                  } else {
+                    setActive(i);
+                  }
+                }}
+                className={`group absolute cursor-pointer overflow-hidden backdrop-blur-md transition-all ${
+                  isCenter
+                    ? "shadow-[0_20px_45px_-12px_rgba(0,0,0,0.38)] hover:shadow-[0_25px_50px_-10px_rgba(80,50,220,0.35)] hover:border-[#c5b5ff]"
+                    : "shadow-[0_16px_36px_-12px_rgba(0,0,0,0.28)] hover:brightness-105"
+                }`}
                 style={{
-                  left: box.x,
-                  top: box.y,
-                  width: box.w,
-                  height: box.h,
+                  left: s.card.x,
+                  top: s.card.y,
+                  width: s.card.w,
+                  height: s.card.h,
                   zIndex: s.z,
-                  transition: transition(["left", "top", "width", "height", "z-index", "filter"]),
-                  filter: slot === "center" ? "none" : "brightness(0.92)",
+                  transform: desktopTransform,
+                  transformOrigin: "center center",
+                  borderRadius: s.radius,
+                  background: s.bg,
+                  border: `1px solid ${s.border}`,
+                  opacity: slot === "back" ? 0 : 1,
+                  pointerEvents: slot === "back" ? "none" : "auto",
+                  transition: transition(["left", "top", "width", "height", "z-index", "filter", "border-color", "box-shadow", "opacity", "transform"]),
+                  filter: isCenter ? "none" : "brightness(0.82) saturate(0.9)",
                 }}
               >
-                <Image
-                  src={p.card}
-                  alt=""
-                  fill
-                  sizes="552px"
-                  className="object-cover"
-                  draggable={false}
-                  priority={p.key === "nexora"}
-                />
+                {/* Curved Thumbnail Preview */}
+                <div
+                  className="absolute overflow-hidden border border-white/10 bg-black/40 shadow-inner"
+                  style={{
+                    left: s.image.x,
+                    top: s.image.y,
+                    width: s.image.w,
+                    height: s.image.h,
+                    borderRadius: s.imageRadius,
+                    transition: transition(["left", "top", "width", "height", "border-radius"]),
+                  }}
+                >
+                  <Image
+                    src={p.thumb}
+                    alt={name(p.key)}
+                    fill
+                    sizes="552px"
+                    className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
+                    draggable={false}
+                    priority={isCenter}
+                  />
+                  {/* Subtle dark overlay for contrast */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/10 pointer-events-none" />
+                </div>
+
                 <CardText
                   slot={slot}
-                  spec={s}
-                  rtl={rtl}
                   title={name(p.key)}
                   description={t(`projects.${p.key}.description`)}
+                  url={p.url}
                   variant="desktop"
+                  specTitle={s.title}
+                  specDesc={s.desc}
+                  specBtn={s.button}
                 />
               </article>
             );
@@ -324,35 +469,43 @@ export function WorkCarousel() {
         </div>
       </div>
 
-      {/* ---------- Navigation ---------- */}
-      <div className="relative z-20 mt-[38.5px] flex items-center justify-center lg:mt-[42px] lg:-translate-x-[20px] lg:rtl:translate-x-[20px]">
-        <NavArrow direction="prev" label={t("previous")} onClick={() => go(-1)} />
-        <ul className="mx-[16px] flex items-center sm:mx-[24px] lg:mx-[50px] lg:gap-[10px]">
-          {PROJECTS.map((p, i) => (
-            <li key={p.key}>
-              <button
-                type="button"
-                aria-label={t("goTo", { name: name(p.key) })}
-                aria-current={i === active}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setActive(i);
-                }}
-                className="group flex min-h-[48px] min-w-[40px] cursor-pointer items-center justify-center p-2 focus-visible:outline-2 focus-visible:outline-periwinkle"
-              >
-                <span
-                  className={
-                    "block size-[11px] rounded-full transition-all duration-300 lg:size-[14px] " +
-                    (i === active
-                      ? "scale-125 bg-[#b67cff] shadow-[0_0_12px_rgba(182,124,255,0.7)] lg:bg-lilac"
-                      : "bg-[#959dc5] group-hover:bg-[#b4bbe0] lg:bg-pager")
-                  }
-                />
-              </button>
-            </li>
+      {/* Desktop Navigation Controls (matching Figma x:697 y:877) */}
+      <div className="mt-8 hidden items-center justify-center gap-6 lg:flex">
+        <button
+          type="button"
+          onClick={() => go(-1)}
+          aria-label={t("previous")}
+          className="flex size-9 cursor-pointer items-center justify-center text-white/70 transition-colors hover:text-white active:scale-95"
+        >
+          <svg className="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M19 12H5M12 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <div className="flex items-center gap-2.5">
+          {PROJECTS.map((_, idx) => (
+            <button
+              key={idx}
+              type="button"
+              onClick={() => setActive(idx)}
+              aria-label={`Project ${idx + 1}`}
+              className={`cursor-pointer rounded-full transition-all duration-300 ${
+                idx === active
+                  ? "h-2 w-2.5 scale-125 bg-[#ab96f9] shadow-[0_0_10px_rgba(171,150,249,0.8)]"
+                  : "h-2 w-2 bg-white/30 hover:bg-white/60"
+              }`}
+            />
           ))}
-        </ul>
-        <NavArrow direction="next" label={t("next")} onClick={() => go(1)} />
+        </div>
+        <button
+          type="button"
+          onClick={() => go(1)}
+          aria-label={t("next")}
+          className="flex size-9 cursor-pointer items-center justify-center text-white/70 transition-colors hover:text-white active:scale-95"
+        >
+          <svg className="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+        </button>
       </div>
     </div>
   );
@@ -362,28 +515,25 @@ export function WorkCarousel() {
 
 function CardText({
   slot,
-  spec,
-  rtl,
   title,
   description,
+  url,
   variant,
+  specTitle,
+  specDesc,
+  specBtn,
 }: {
   slot: Slot;
-  spec: SlotSpec;
-  rtl: boolean;
   title: string;
   description: string;
+  url: string;
   variant: "mobile" | "desktop";
+  specTitle: { x: number; y: number };
+  specDesc?: { x: number; y: number };
+  specBtn?: { x: number; y: number; size: number };
 }) {
   const desktop = variant === "desktop";
   const center = slot === "center";
-  const titleClass = desktop
-    ? center
-      ? "text-[32px] leading-[40px] font-semibold text-white"
-      : "text-[25px] leading-[32px] font-normal text-[#f5f4ff]"
-    : center
-      ? "text-[16px] leading-[25.6px] font-medium text-fg"
-      : "text-[16px] leading-[21.3px] font-normal text-fg";
 
   const fade = (visible: boolean): CSSProperties => ({
     opacity: visible ? 1 : 0,
@@ -391,115 +541,83 @@ function CardText({
     pointerEvents: visible ? "auto" : "none",
   });
 
-  const desc = spec.desc ?? (desktop ? DESKTOP.center.desc! : MOBILE.center.desc!);
-  const btn = spec.button;
-
   return (
     <>
       <h3
-        className={`absolute whitespace-nowrap ${titleClass}`}
+        className={
+          "absolute font-bold tracking-tight text-white transition-all " +
+          (desktop
+            ? center
+              ? "text-[26px] leading-[34px]"
+              : "text-[20px] leading-[28px] text-[#e0ddfc]"
+            : center
+              ? "text-[16px] leading-[22px]"
+              : "text-[13px] leading-[18px] text-[#ded9fb]")
+        }
         style={{
-          ...pos({ ...spec.title, w: 0, h: 0 }, rtl),
-          transition: transition(["left", "right", "top", "font-size", "line-height"]),
+          left: specTitle.x,
+          top: specTitle.y,
+          transition: transition(["left", "top", "font-size", "line-height"]),
         }}
       >
         {title}
       </h3>
 
-      <p
-        className={
-          "absolute whitespace-pre-line " +
-          (desktop
-            ? "max-w-[300px] text-[20px] leading-[30px] text-[#e6e5f2]"
-            : "max-w-[164px] text-[12px] leading-[16.9px] text-[#e1dff8]")
-        }
-        style={{ ...pos({ ...desc, w: 0, h: 0 }, rtl), ...fade(center) }}
-      >
-        {description}
-      </p>
-
-      <span
-        aria-hidden="true"
-        className={
-          "absolute flex items-center justify-center rounded-full " +
-          (desktop
-            ? "border-[1.1px] border-[#f0f2ff]/40 bg-[#101639]/12 text-[#eef1ff] transition-[background-color,border-color] duration-300 group-hover:border-white/70 group-hover:bg-white/10"
-            : "border-[0.5px] border-[#8392c3]/70 bg-[#121c34]/50 text-[#f5f1ff]")
-        }
-        style={{
-          ...pos({ x: btn?.x ?? 0, y: btn?.y ?? 0, w: btn?.size ?? 0, h: 0 }, rtl),
-          width: btn?.size ?? 0,
-          height: btn?.size ?? 0,
-          ...fade(Boolean(btn)),
-        }}
-      >
-        <svg
-          viewBox="0 0 29 29"
-          fill="none"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="rtl:-scale-x-100"
+      {specDesc && (
+        <p
+          className={
+            "absolute whitespace-pre-line text-[#cfd3ea] transition-all " +
+            (desktop
+              ? "max-w-[340px] text-[15px] leading-[22px]"
+              : "max-w-[160px] text-[11px] leading-[15px]")
+          }
           style={{
-            width: desktop ? "58%" : "55%",
-            height: desktop ? "58%" : "55%",
-            strokeWidth: desktop ? 2.1 : 1.9,
+            left: specDesc.x,
+            top: specDesc.y,
+            ...fade(center),
           }}
         >
-          <path d="M4 14.5H24M16 22.5L24 14.5L16 6.5" />
-        </svg>
-      </span>
+          {description}
+        </p>
+      )}
+
+      {specBtn && (
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
+          aria-label={`Open ${title}`}
+          className={
+            "absolute flex items-center justify-center rounded-full transition-all duration-300 " +
+            (desktop
+              ? "border border-white/30 bg-white/10 text-white hover:scale-110 hover:border-white hover:bg-brand/80 hover:shadow-[0_0_20px_rgba(70,51,255,0.7)]"
+              : "border border-white/20 bg-white/10 text-white active:scale-95")
+          }
+          style={{
+            left: specBtn.x,
+            top: specBtn.y,
+            width: specBtn.size,
+            height: specBtn.size,
+            ...fade(Boolean(specBtn)),
+          }}
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            style={{
+              width: "48%",
+              height: "48%",
+              strokeWidth: 2.2,
+            }}
+          >
+            <path d="M7 17L17 7M17 7H7M17 7V17" />
+          </svg>
+        </a>
+      )}
     </>
   );
-}
-
-function NavArrow({
-  direction,
-  label,
-  onClick,
-}: {
-  direction: "prev" | "next";
-  label: string;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      aria-label={label}
-      onClick={(e) => {
-        e.stopPropagation();
-        onClick();
-      }}
-      className="group flex size-[52px] min-h-[48px] min-w-[48px] cursor-pointer items-center justify-center rounded-full text-[#f3f5ff] transition-all hover:bg-white/10 active:scale-90 focus-visible:outline-2 focus-visible:outline-periwinkle lg:size-[52px] lg:text-[#eef1ff]"
-    >
-      <svg
-        viewBox="0 0 29 29"
-        fill="none"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        aria-hidden="true"
-        className={
-          "size-[26px] stroke-[2.2] transition-transform duration-300 lg:size-[29px] lg:stroke-[2.1] rtl:-scale-x-100 " +
-          (direction === "prev" ? "group-hover:-translate-x-1" : "group-hover:translate-x-1")
-        }
-      >
-        {direction === "prev" ? (
-          <path d="M25 14.5H5M13 22.5L5 14.5L13 6.5" />
-        ) : (
-          <path d="M4 14.5H24M16 22.5L24 14.5L16 6.5" />
-        )}
-      </svg>
-    </button>
-  );
-}
-
-/** Mirror a box horizontally inside a canvas for RTL. */
-function mirror(b: Box, canvasW: number, rtl: boolean): Box {
-  return rtl ? { ...b, x: canvasW - b.x - b.w } : b;
-}
-
-/** Position a child inside a card using inline-start so it mirrors in RTL. */
-function pos(b: Box, rtl: boolean): CSSProperties {
-  return rtl ? { right: b.x, top: b.y } : { left: b.x, top: b.y };
 }

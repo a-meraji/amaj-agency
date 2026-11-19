@@ -39,9 +39,7 @@ export async function Contact() {
   const t = await getTranslations("Contact");
 
   return (
-    <section id="contact" className="relative isolate overflow-hidden bg-ink-950">
-      <GridBackdrop className="-z-10" />
-
+    <section id="contact" className="relative isolate bg-transparent">
       {/* Ambient background glows */}
       <span
         aria-hidden="true"
@@ -82,12 +80,6 @@ export async function Contact() {
               rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
               className="group relative flex size-[62px] sm:size-[72px] lg:size-[80px] items-center justify-center rounded-[18px] sm:rounded-[22px] border border-[#2f3f78] bg-[#121c3b]/90 shadow-xl backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-indigo hover:bg-[#18244e] hover:shadow-[0_0_30px_rgba(97,122,245,0.45)] active:scale-95"
             >
-              {/* Top ambient highlight on hover */}
-              <span
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-x-2 top-0 h-[2px] rounded-full bg-gradient-to-r from-[#4b66f6] to-[#6091fa] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-              />
-
               <Icon className="size-[30px] sm:size-[34px] lg:size-[38px] text-[#9bb0ff] transition-all duration-300 group-hover:text-white group-hover:scale-110" />
             </a>
           ))}

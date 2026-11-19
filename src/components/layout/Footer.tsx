@@ -1,5 +1,5 @@
-import { getTranslations, getLocale } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
+import { getTranslations } from "next-intl/server";
+import Link from "next/link";
 import { LogoMark } from "@/components/icons/brand";
 import { BackToTop } from "@/components/ui/BackToTop";
 
@@ -14,7 +14,6 @@ const FOOTER_LINKS = [
 export async function Footer() {
   const t = await getTranslations("Footer");
   const navT = await getTranslations("Nav");
-  const locale = await getLocale();
   const currentYear = 2026;
 
   return (
@@ -40,19 +39,16 @@ export async function Footer() {
 
           {/* Quick Nav Links */}
           <ul className="flex flex-wrap items-center justify-center gap-6 text-[14px] font-medium sm:gap-8">
-            {FOOTER_LINKS.map(({ key, href }) => {
-              const fullHref = href.startsWith("#") ? `/${locale}${href}` : href;
-              return (
-                <li key={key}>
-                  <a
-                    href={fullHref}
-                    className="transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-periwinkle"
-                  >
-                    {key === "contact" ? navT("cta") : t(`links.${key}`)}
-                  </a>
-                </li>
-              );
-            })}
+            {FOOTER_LINKS.map(({ key, href }) => (
+              <li key={key}>
+                <a
+                  href={href}
+                  className="transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-periwinkle"
+                >
+                  {key === "contact" ? navT("cta") : t(`links.${key}`)}
+                </a>
+              </li>
+            ))}
           </ul>
         </div>
 

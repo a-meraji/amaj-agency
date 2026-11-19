@@ -15,35 +15,36 @@ export async function Team() {
   return (
     <section
       id="team"
-      className="relative isolate overflow-hidden bg-ink-900 lg:h-[941px] lg:min-h-[941px]"
+      className="relative isolate bg-transparent h-[240vh] lg:h-[280vh]"
     >
-      <GridBackdrop className="-z-10" />
+      {/* Pinned sticky viewport container: fits viewport on all screens without overflowing */}
+      <div className="sticky top-0 flex h-screen lg:h-screen lg:max-h-[941px] flex-col justify-start overflow-hidden lg:overflow-visible">
+        {/* Decorative ambient violet/indigo bloom */}
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute top-1/4 end-0 -z-10 h-[380px] w-[450px] rounded-full bg-[#4633ff]/12 blur-[90px] lg:h-[550px] lg:w-[650px]"
+        />
 
-      {/* Decorative ambient violet/indigo bloom */}
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute top-1/4 end-0 -z-10 h-[380px] w-[450px] rounded-full bg-[#4633ff]/12 blur-[90px] lg:h-[550px] lg:w-[650px]"
-      />
+        {/* Desktop static watermark logo: matching Figma x:832, y:181 (476x431) behind member right shoulder */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute hidden lg:block -z-10 text-[#6078da]/25 start-1/2 translate-x-[0px] rtl:-translate-x-[476px] top-[181px] w-[476px] h-[431px]"
+        >
+          <TeamWatermark className="h-full w-full" />
+        </div>
 
-      {/* Desktop static watermark logo: matching Figma x:832, y:181 (476x431) behind member right shoulder */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute hidden lg:block -z-10 text-[#6078da]/25 start-1/2 translate-x-[0px] rtl:-translate-x-[476px] top-[181px] w-[476px] h-[431px]"
-      >
-        <TeamWatermark className="h-full w-full" />
-      </div>
+        <div className="relative mx-auto flex h-full max-w-[1672px] flex-col justify-start px-6 pt-[95px] pb-0 lg:px-[140px] xl:px-[216px] lg:pt-[80px] xl:pt-[114px] lg:pb-0 w-full">
+          <header className="reveal relative z-10">
+            <Eyebrow
+              tone="periwinkle"
+              endLine="w-[232.5px] lg:w-[352px]"
+            >
+              {t("eyebrow")}
+            </Eyebrow>
+          </header>
 
-      <div className="relative mx-auto flex h-full max-w-[1672px] flex-col justify-start px-6 pt-[95px] pb-0 lg:px-[114px] lg:pt-[114px] lg:pb-0">
-        <header className="reveal relative z-10">
-          <Eyebrow
-            tone="periwinkle"
-            endLine="w-[232.5px] lg:w-[352px]"
-          >
-            {t("eyebrow")}
-          </Eyebrow>
-        </header>
-
-        <TeamCarousel />
+          <TeamCarousel />
+        </div>
       </div>
     </section>
   );

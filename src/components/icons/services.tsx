@@ -13,11 +13,11 @@ const stroke = {
 /** AI & Automation — Modern curved AI intelligence sparkle with companion automation spark. */
 export function ServiceAiIcon(props: IconProps) {
   return (
-    <svg viewBox="0 0 24 24" strokeWidth={2.3} aria-hidden="true" {...stroke} {...props}>
+    <svg viewBox="0 0 24 24" strokeWidth={1.4} aria-hidden="true" {...stroke} {...props}>
       {/* Primary curved AI Sparkle */}
       <path d="M12 2C12 6.8 8.2 10.5 3 11C8.2 11.5 12 15.2 12 20C12 15.2 15.8 11.5 21 11C15.8 10.5 12 6.8 12 2Z" />
       {/* Secondary automation spark */}
-      <path d="M18.5 3.5C18.5 5 17.5 6 16 6.5C17.5 7 18.5 8 18.5 9.5C18.5 8 19.5 7 21 6.5C19.5 6 18.5 5 18.5 3.5Z" strokeWidth={1.8} />
+      <path d="M18.5 3.5C18.5 5 17.5 6 16 6.5C17.5 7 18.5 8 18.5 9.5C18.5 8 19.5 7 21 6.5C19.5 6 18.5 5 18.5 3.5Z" strokeWidth={1.2} />
     </svg>
   );
 }
@@ -25,14 +25,14 @@ export function ServiceAiIcon(props: IconProps) {
 /** UI & UX Design — Modern interface artboard canvas with rounded components and controls. */
 export function ServiceUiUxIcon(props: IconProps) {
   return (
-    <svg viewBox="0 0 24 24" strokeWidth={2.3} aria-hidden="true" {...stroke} {...props}>
+    <svg viewBox="0 0 24 24" strokeWidth={1.4} aria-hidden="true" {...stroke} {...props}>
       {/* Artboard window frame with smooth rounded corners */}
       <rect x="2.5" y="3.5" width="19" height="17" rx="3.5" />
       {/* Navigation header line */}
       <path d="M2.5 8.5h19" />
       {/* UI window control dots */}
-      <circle cx="5.8" cy="6" r="0.8" fill="currentColor" />
-      <circle cx="8.8" cy="6" r="0.8" fill="currentColor" />
+      <circle cx="5.8" cy="6" r="0.75" fill="currentColor" />
+      <circle cx="8.8" cy="6" r="0.75" fill="currentColor" />
       {/* Rounded UI component card */}
       <rect x="5.5" y="11.5" width="5.5" height="5.5" rx="1.5" />
       {/* UX interaction / content sliders */}
@@ -44,7 +44,7 @@ export function ServiceUiUxIcon(props: IconProps) {
 /** Web & Mobile Development — Web desktop screen + overlapping mobile smartphone. */
 export function ServiceDevIcon(props: IconProps) {
   return (
-    <svg viewBox="0 0 24 24" strokeWidth={2.3} aria-hidden="true" {...stroke} {...props}>
+    <svg viewBox="0 0 24 24" strokeWidth={1.4} aria-hidden="true" {...stroke} {...props}>
       {/* Web desktop monitor */}
       <rect x="2" y="3.5" width="13.5" height="11.5" rx="2.5" />
       <path d="M5 19h7M8.75 15v4" />
@@ -60,15 +60,15 @@ export function ServiceDevIcon(props: IconProps) {
 /** Marketing — Audience targeting bullseye (connecting products with the right audience). */
 export function ServiceMarketingIcon(props: IconProps) {
   return (
-    <svg viewBox="0 0 24 24" strokeWidth={2.3} aria-hidden="true" {...stroke} {...props}>
+    <svg viewBox="0 0 24 24" strokeWidth={1.4} aria-hidden="true" {...stroke} {...props}>
       {/* Outer target ring */}
       <circle cx="12" cy="12" r="9.5" />
       {/* Inner target ring */}
       <circle cx="12" cy="12" r="5.5" />
       {/* Bullseye center */}
-      <circle cx="12" cy="12" r="1.8" fill="currentColor" />
+      <circle cx="12" cy="12" r="1.4" fill="currentColor" />
       {/* Precision crosshair alignment markers */}
-      <path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2" strokeWidth={2} />
+      <path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2" strokeWidth={1.3} />
     </svg>
   );
 }

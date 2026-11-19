@@ -33,17 +33,17 @@ export async function Services() {
       id="services"
       className="relative isolate overflow-hidden bg-ink-900 lg:bg-ink-950"
     >
-      <GridBackdrop className="-z-10" />
+      <GridBackdrop className="-z-10 [mask-image:linear-gradient(to_bottom,black_70%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_70%,transparent_100%)]" />
 
       {/* Mobile: very subtle bottom blue lift */}
       <span
         aria-hidden="true"
         className="pointer-events-none absolute top-[804px] left-1/2 -z-10 h-[165px] w-[245px] -translate-x-[83.25px] rounded-full bg-[#2472d0]/8 blur-[60px] lg:hidden"
       />
-      {/* Desktop: seamless transition into the Work section (#171b3d) */}
+      {/* Seamless transition into the Work section (#171b3d) */}
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 hidden h-[145px] bg-[linear-gradient(180deg,rgb(23_27_61/0)_0%,rgb(23_27_61/0.27)_28%,rgb(23_27_61/0.75)_58%,rgb(23_27_61/0.98)_84%,#171b3d_100%)] lg:block"
+        className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-[145px] bg-seam-bottom"
       />
 
       <div className="mx-auto max-w-[1672px] px-6 pt-[119px] pb-[138.5px] lg:px-10 lg:pt-[158px] lg:pb-[234px]">

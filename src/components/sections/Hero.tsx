@@ -3,7 +3,48 @@ import { getTranslations } from "next-intl/server";
 import { ButtonLink } from "@/components/ui/Button";
 import { GridBackdrop } from "@/components/ui/GridBackdrop";
 
-const CLIENTS = Array.from({ length: 5 }, (_, i) => ({ id: `ted-${i}`, name: "TED" }));
+const CLIENTS = [
+  {
+    id: "mimmo",
+    name: "Mimmo",
+    src: "/images/clients/mimmo.png",
+    width: 232,
+    height: 148,
+    className: "h-[22px] w-auto opacity-70 lg:h-[38px] lg:opacity-[0.62]",
+  },
+  {
+    id: "bm",
+    name: "BM",
+    src: "/images/clients/bm.png",
+    width: 460,
+    height: 500,
+    className: "h-[26px] w-auto opacity-70 lg:h-[45px] lg:opacity-[0.62]",
+  },
+  {
+    id: "rahino",
+    name: "Rahino Academy",
+    src: "/images/clients/rahino.png",
+    width: 1014,
+    height: 414,
+    className: "h-[22px] w-auto opacity-70 lg:h-[38px] lg:opacity-[0.62]",
+  },
+  {
+    id: "pixel-c",
+    name: "Pixel C",
+    src: "/images/clients/pixel-c.png",
+    width: 224,
+    height: 244,
+    className: "h-[20px] w-auto opacity-70 lg:h-[33px] lg:opacity-[0.62]",
+  },
+  {
+    id: "blue-clinic",
+    name: "Blue Clinic",
+    src: "/images/clients/blue-clinic.png",
+    width: 722,
+    height: 321,
+    className: "h-[22px] w-auto opacity-70 lg:h-[38px] lg:opacity-[0.62]",
+  },
+];
 
 /*
  * Figma: "HERo" (4:2, 1672×941) and "MOBILE 01 — Hero" (176:678, 853×1844 @2x).
@@ -93,24 +134,25 @@ function TrustRow({ caption, label }: { caption: string; label: string }) {
       {/* Client logos (placeholders in Figma) */}
       <ul
         aria-label={label}
+        dir="ltr"
         className="mx-auto mt-[24.5px] grid max-w-[392.5px] grid-cols-5 lg:mt-[34px] lg:max-w-[1270px]"
       >
         {CLIENTS.map((client, i) => (
           <li
             key={client.id}
             className={
-              "relative flex h-[26px] items-center justify-center lg:h-[27px] " +
+              "relative flex h-[34px] items-center justify-center lg:h-[50px] " +
               (i > 0
                 ? "lg:before:absolute lg:before:start-0 lg:before:inset-y-0 lg:before:w-px lg:before:bg-[#9499b3]/51"
                 : "")
             }
           >
             <Image
-              src="/images/clients/ted.png"
+              src={client.src}
               alt={client.name}
-              width={127}
-              height={46}
-              className="h-[13.5px] w-auto opacity-60 lg:h-[23px] lg:opacity-[0.53]"
+              width={client.width}
+              height={client.height}
+              className={client.className}
             />
           </li>
         ))}
@@ -122,34 +164,58 @@ function TrustRow({ caption, label }: { caption: string; label: string }) {
 function HeroBackground() {
   return (
     <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-      <GridBackdrop />
-
-      {/* Desktop: baked ambient light + native halos, on a centered 1672px canvas */}
-      <div className="absolute inset-y-0 left-1/2 hidden w-[max(100%,1672px)] -translate-x-1/2 lg:block">
+      {/* Desktop: baked ambient light + native halos, on a centered 1672px canvas with seamless bottom fade */}
+      <div className="absolute inset-y-0 left-1/2 hidden w-[max(100%,1672px)] -translate-x-1/2 lg:block [mask-image:linear-gradient(to_bottom,black_75%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_75%,transparent_100%)]">
         <Image
           src="/images/hero/ambient.webp"
           alt=""
           fill
           priority
           sizes="1672px"
-          className="animate-fade object-cover"
+          className="animate-fade object-cover opacity-50"
         />
       </div>
       <div className="absolute inset-y-0 left-1/2 hidden w-[1672px] -translate-x-1/2 lg:block">
-        <Halo className="top-[121px] left-[115px] h-[335px] w-[566px] opacity-[0.37] [--delay:0s] [--duration:22s]" color="70 51 255" stops={[0.13, 0.04]} />
-        <Halo className="top-[102px] left-[370px] h-[314px] w-[632px] opacity-[0.35] [--delay:-6s] [--duration:26s]" color="51 134 255" stops={[0.1, 0.03]} />
-        <Halo className="top-[366px] left-[1060px] h-[389px] w-[503px] opacity-[0.37] [--delay:-12s] [--duration:24s]" color="51 134 255" stops={[0.19, 0.05]} />
-        <Halo className="top-[526px] left-[970px] h-[239px] w-[471px] opacity-[0.29] [--delay:-3s] [--duration:20s]" color="70 51 255" stops={[0.1, 0]} />
+        {/* Top-left lighting zone: drifting along the defined path */}
+        <div className="animate-halo-path-left absolute inset-0" style={{ willChange: "transform" }}>
+          <Halo
+            className="top-[110px] left-[95px] h-[370px] w-[610px] opacity-[0.85] blur-[60px]"
+            color="70 51 255"
+            stops={[0.55, 0.18]}
+          />
+          <Halo
+            className="top-[90px] left-[350px] h-[340px] w-[670px] opacity-[0.75] blur-[55px]"
+            color="51 134 255"
+            stops={[0.44, 0.14]}
+          />
+        </div>
+
+        {/* Bottom-right lighting zone: drifting along the defined path */}
+        <div className="animate-halo-path-right absolute inset-0" style={{ willChange: "transform" }}>
+          <Halo
+            className="top-[350px] left-[1040px] h-[420px] w-[540px] opacity-[0.85] blur-[60px]"
+            color="51 134 255"
+            stops={[0.56, 0.2]}
+          />
+          <Halo
+            className="top-[510px] left-[950px] h-[270px] w-[500px] opacity-[0.72] blur-[55px]"
+            color="70 51 255"
+            stops={[0.42, 0.12]}
+          />
+        </div>
       </div>
 
-      {/* Mobile: two blurred atmospheric lights (frame coordinates −31px) */}
+      {/* Grid backdrop placed above ambient light, matching section 2 scale & style */}
+      <GridBackdrop />
+
+      {/* Mobile: two blurred atmospheric lights with dynamic drift */}
       <div className="absolute inset-y-0 left-1/2 w-[426.5px] -translate-x-1/2 lg:hidden">
-        <span className="animate-drift absolute top-[127px] left-[22.5px] h-[160px] w-[140px] rounded-full bg-[#592add]/12 blur-[47.5px] [--duration:16s]" />
-        <span className="animate-drift absolute top-[394px] left-[260px] h-[230px] w-[155px] rounded-full bg-[#188af9]/11 blur-[52.5px] [--delay:-8s] [--duration:20s]" />
+        <span className="animate-drift absolute top-[110px] left-[15px] h-[230px] w-[190px] rounded-full bg-[#592add]/32 blur-[55px] [--duration:7.5s]" />
+        <span className="animate-drift absolute top-[370px] left-[230px] h-[290px] w-[210px] rounded-full bg-[#188af9]/30 blur-[60px] [--delay:-4s] [--duration:9s]" />
       </div>
 
-      {/* Fine analog grain */}
-      <div className="bg-grain absolute inset-0 hidden opacity-60 lg:block" />
+      {/* Fine analog grain with smooth feathering into next section */}
+      <div className="bg-grain absolute inset-0 hidden opacity-25 lg:block [mask-image:linear-gradient(to_bottom,black_70%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_70%,transparent_100%)]" />
     </div>
   );
 }

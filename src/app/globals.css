@@ -8,8 +8,7 @@
  */
 @theme {
   /* ---------- Fonts ---------- */
-  --font-sans: var(--font-quicksand), var(--font-vazirmatn), ui-sans-serif,
-    system-ui, sans-serif;
+  --font-sans: var(--font-quicksand), ui-sans-serif, system-ui, sans-serif;
 
   /* ---------- Surfaces ---------- */
   --color-ink-950: #070a19; /* hero, services   (merged #080a1b) */
@@ -112,12 +111,35 @@
   );
 }
 
+/* Atmospheric section boundary transition gradients (Services ↔ Work ↔ Team) */
+@utility bg-seam-bottom {
+  background-image: linear-gradient(
+    180deg,
+    rgb(23 27 61 / 0) 0%,
+    rgb(23 27 61 / 0.27) 28%,
+    rgb(23 27 61 / 0.75) 58%,
+    rgb(23 27 61 / 0.98) 84%,
+    var(--color-dusk) 100%
+  );
+}
+
+@utility bg-seam-top {
+  background-image: linear-gradient(
+    180deg,
+    var(--color-dusk) 0%,
+    rgb(23 27 61 / 0.98) 16%,
+    rgb(23 27 61 / 0.75) 42%,
+    rgb(23 27 61 / 0.27) 72%,
+    rgb(23 27 61 / 0) 100%
+  );
+}
+
 /* Architectural background grid. Desktop: 85px cells, 0.8px lines.
    Mobile: 38px cells, 0.5px lines (Figma ÷ 2). */
 @utility bg-grid {
   --grid-size: 38px;
-  --grid-line: 0.5px;
-  --grid-color: rgb(105 129 176 / 0.08);
+  --grid-line: 0.8px;
+  --grid-color: rgb(110 135 185 / 0.14);
   background-image:
     linear-gradient(to right, var(--grid-color) var(--grid-line), transparent var(--grid-line)),
     linear-gradient(to bottom, var(--grid-color) var(--grid-line), transparent var(--grid-line));
@@ -160,10 +182,147 @@
   0%,
   100% {
     transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.85;
+  }
+  33% {
+    transform: translate3d(45px, -45px, 0) scale(1.18);
+    opacity: 1;
+  }
+  66% {
+    transform: translate3d(-38px, 35px, 0) scale(0.92);
+    opacity: 0.85;
+  }
+}
+
+@keyframes halo-path-left {
+  0% {
+    transform: translate3d(50px, -35px, 0) scale(0.94);
+    opacity: 0.85;
+  }
+  28% {
+    transform: translate3d(130px, 50px, 0) scale(1.15);
+    opacity: 1;
+  }
+  52% {
+    transform: translate3d(-80px, 95px, 0) scale(1.06);
+    opacity: 0.9;
+  }
+  76% {
+    transform: translate3d(-120px, -25px, 0) scale(0.96);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate3d(50px, -35px, 0) scale(0.94);
+    opacity: 0.85;
+  }
+}
+
+@keyframes halo-path-right {
+  0% {
+    transform: translate3d(-60px, 45px, 0) scale(0.95);
+    opacity: 0.85;
+  }
+  26% {
+    transform: translate3d(-140px, -50px, 0) scale(1.14);
+    opacity: 1;
+  }
+  54% {
+    transform: translate3d(75px, -90px, 0) scale(1.06);
+    opacity: 0.92;
+  }
+  78% {
+    transform: translate3d(125px, 30px, 0) scale(0.98);
+    opacity: 0.82;
+  }
+  100% {
+    transform: translate3d(-60px, 45px, 0) scale(0.95);
+    opacity: 0.85;
+  }
+}
+
+@keyframes work-glow-left {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.94);
+    opacity: 0.82;
+  }
+  25% {
+    transform: translate3d(110px, -65px, 0) scale(1.2);
+    opacity: 1;
   }
   50% {
-    transform: translate3d(2%, -3%, 0) scale(1.06);
+    transform: translate3d(160px, 45px, 0) scale(0.96);
+    opacity: 0.88;
   }
+  75% {
+    transform: translate3d(-60px, 80px, 0) scale(1.15);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(0.94);
+    opacity: 0.82;
+  }
+}
+
+@keyframes work-glow-right {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.94);
+    opacity: 0.82;
+  }
+  25% {
+    transform: translate3d(-105px, 68px, 0) scale(1.18);
+    opacity: 1;
+  }
+  50% {
+    transform: translate3d(-165px, -48px, 0) scale(0.96);
+    opacity: 0.88;
+  }
+  75% {
+    transform: translate3d(65px, -70px, 0) scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(0.94);
+    opacity: 0.82;
+  }
+}
+
+@keyframes work-glow-center {
+  0% {
+    transform: translate3d(-50%, 0, 0) scale(0.95);
+    opacity: 0.8;
+  }
+  33% {
+    transform: translate3d(calc(-50% + 55px), -55px, 0) scale(1.24);
+    opacity: 1;
+  }
+  66% {
+    transform: translate3d(calc(-50% - 50px), 40px, 0) scale(0.92);
+    opacity: 0.82;
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0) scale(0.95);
+    opacity: 0.8;
+  }
+}
+
+@utility animate-work-glow-left {
+  animation: work-glow-left 6.5s ease-in-out infinite;
+}
+
+@utility animate-work-glow-right {
+  animation: work-glow-right 7s ease-in-out infinite;
+}
+
+@utility animate-work-glow-center {
+  animation: work-glow-center 5.5s ease-in-out infinite;
+}
+
+@utility animate-halo-path-left {
+  animation: halo-path-left 7.5s ease-in-out infinite;
+}
+
+@utility animate-halo-path-right {
+  animation: halo-path-right 8.5s ease-in-out infinite;
 }
 
 @utility animate-rise {
@@ -177,7 +336,7 @@
 }
 
 @utility animate-drift {
-  animation: drift var(--duration, 18s) ease-in-out infinite;
+  animation: drift var(--duration, 8s) ease-in-out infinite;
   animation-delay: var(--delay, 0ms);
 }
 
@@ -210,14 +369,30 @@ html {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Structural Desktop Scaling:
+   Figma was designed at a 1672px canvas width. On standard 1080p/laptop displays (1024px-1919px),
+   this scales the entire desktop layout by 80% so all content fits naturally above the viewport fold. */
+@media (min-width: 1024px) {
+  html {
+    zoom: 0.8;
+  }
+}
+
+@media (min-width: 1920px) {
+  html {
+    zoom: 0.9;
+  }
+}
+
+@media (min-width: 2200px) {
+  html {
+    zoom: 1;
+  }
+}
+
 body {
   font-family: var(--font-sans);
   overflow-x: clip;
-}
-
-/* Letter-spacing breaks Persian cursive joining — always reset it in RTL. */
-:lang(fa) * {
-  letter-spacing: 0 !important;
 }
 
 /* Anchored sections clear the fixed navigation. */
