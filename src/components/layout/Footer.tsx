@@ -11,10 +11,10 @@ const FOOTER_LINKS = [
   { key: "contact", href: "#contact" },
 ] as const;
 
-export async function Footer() {
+export async function Footer({ tagline }: { tagline?: string }) {
   const t = await getTranslations("Footer");
   const navT = await getTranslations("Nav");
-  const currentYear = 2026;
+  const currentYear = new Date().getUTCFullYear();
 
   return (
     <footer className="relative border-t border-[#1d274f] bg-[#070c20] text-[#a5b4dc]">
@@ -32,9 +32,11 @@ export async function Footer() {
                 Amaj Agency
               </span>
             </Link>
-            <p className="mt-2 max-w-[340px] text-[13px] leading-[20px] text-[#8e9ecb]">
-              {t("tagline")}
-            </p>
+            {tagline && (
+              <p className="mt-2 max-w-[340px] text-[13px] leading-[20px] text-[#8e9ecb]">
+                {tagline}
+              </p>
+            )}
           </div>
 
           {/* Quick Nav Links */}
@@ -42,7 +44,7 @@ export async function Footer() {
             {FOOTER_LINKS.map(({ key, href }) => (
               <li key={key}>
                 <a
-                  href={href}
+                  href={`/${href}`}
                   className="transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-periwinkle"
                 >
                   {key === "contact" ? navT("cta") : t(`links.${key}`)}

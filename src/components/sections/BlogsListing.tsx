@@ -1,114 +1,22 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState, useMemo, useRef, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { GridBackdrop } from "@/components/ui/GridBackdrop";
 import { CalendarIcon, ClockIcon, ArrowRightBlog } from "@/components/icons/ui";
 
-export type BlogCategory = "all" | "product" | "engineering" | "design" | "ai" | "growth";
-export type SortOption = "latest" | "oldest" | "readingTime";
+import { articleCategories, type ArticleCategory, type ArticleSummary } from "@/lib/content/database";
+import { articleGradients, formatArticleDate, imageUrl } from "@/lib/content/presentation";
 
-export interface Article {
-  id: string;
-  category: BlogCategory;
-  categoryKey: string;
-  tagColor: string;
-  image: string;
-  titleKey: string;
-  excerptKey: string;
-  dateStr: string;
-  dateObj: Date;
-  readMinutes: number;
-}
+type BlogCategory = "all" | ArticleCategory;
+type SortOption = "latest" | "oldest" | "readingTime";
 
-const ARTICLES: Article[] = [
-  {
-    id: "product-thinking",
-    category: "product",
-    categoryKey: "product",
-    tagColor: "from-[#4b66f6] to-[#6091fa]",
-    image: "/images/blog/featured.webp",
-    titleKey: "productThinking.title",
-    excerptKey: "productThinking.excerpt",
-    dateStr: "Jan 26, 2025",
-    dateObj: new Date("2025-01-26"),
-    readMinutes: 8,
-  },
-  {
-    id: "engineering-scale",
-    category: "engineering",
-    categoryKey: "engineering",
-    tagColor: "from-[#10b981] to-[#34d399]",
-    image: "/images/blog/engineering.webp",
-    titleKey: "engineering.title",
-    excerptKey: "engineering.excerpt",
-    dateStr: "Jan 20, 2025",
-    dateObj: new Date("2025-01-20"),
-    readMinutes: 6,
-  },
-  {
-    id: "better-ux",
-    category: "design",
-    categoryKey: "design",
-    tagColor: "from-[#8b5cf6] to-[#a78bfa]",
-    image: "/images/blog/ux.webp",
-    titleKey: "ux.title",
-    excerptKey: "ux.excerpt",
-    dateStr: "Jan 15, 2025",
-    dateObj: new Date("2025-01-15"),
-    readMinutes: 5,
-  },
-  {
-    id: "sustainable-growth",
-    category: "growth",
-    categoryKey: "growth",
-    tagColor: "from-[#f59e0b] to-[#fbbf24]",
-    image: "/images/blog/growth.webp",
-    titleKey: "growth.title",
-    excerptKey: "growth.excerpt",
-    dateStr: "Jan 10, 2025",
-    dateObj: new Date("2025-01-10"),
-    readMinutes: 6,
-  },
-  {
-    id: "ai-agents-production",
-    category: "ai",
-    categoryKey: "ai",
-    tagColor: "from-[#ec4899] to-[#f472b6]",
-    image: "/images/blog/ai.webp",
-    titleKey: "ai.title",
-    excerptKey: "ai.excerpt",
-    dateStr: "Jan 05, 2025",
-    dateObj: new Date("2025-01-05"),
-    readMinutes: 7,
-  },
-  {
-    id: "resilient-frontend",
-    category: "engineering",
-    categoryKey: "engineering",
-    tagColor: "from-[#10b981] to-[#34d399]",
-    image: "/images/blog/frontend.webp",
-    titleKey: "frontend.title",
-    excerptKey: "frontend.excerpt",
-    dateStr: "Dec 28, 2024",
-    dateObj: new Date("2024-12-28"),
-    readMinutes: 4,
-  },
-];
+const categories = ["all", ...articleCategories] as const;
 
-const CATEGORIES: { key: BlogCategory; labelKey: string }[] = [
-  { key: "all", labelKey: "all" },
-  { key: "product", labelKey: "product" },
-  { key: "engineering", labelKey: "engineering" },
-  { key: "design", labelKey: "design" },
-  { key: "ai", labelKey: "ai" },
-  { key: "growth", labelKey: "growth" },
-];
-
-export function BlogsListing() {
-  const tBlog = useTranslations("Blog");
+export function BlogsListing({ articles }: { articles: ArticleSummary[] }) {
   const tPage = useTranslations("BlogsPage");
 
   const [activeCategory, setActiveCategory] = useState<BlogCategory>("all");
@@ -138,53 +46,15 @@ export function BlogsListing() {
     };
   }, [isSortOpen]);
 
-  // Helper to resolve localized title and excerpt with fallback
-  const getArticleTitle = (titleKey: string) => {
-    try {
-      if (titleKey === "productThinking.title") return tBlog("posts.productThinking.title");
-      if (titleKey === "engineering.title") return tBlog("posts.engineering.title");
-      if (titleKey === "ux.title") return tBlog("posts.ux.title");
-      if (titleKey === "growth.title") return tBlog("posts.growth.title");
-      if (titleKey === "ai.title") return "Autonomous AI Agents in Enterprise Workflows";
-      if (titleKey === "frontend.title") return "Next.js & Turbopack: Building Ultra-Fast Frontends";
-      return titleKey;
-    } catch {
-      return titleKey;
-    }
-  };
-
-  const getArticleExcerpt = (excerptKey: string) => {
-    try {
-      if (excerptKey === "productThinking.excerpt") return tBlog("posts.productThinking.excerpt");
-      if (excerptKey === "engineering.excerpt") return tBlog("posts.engineering.excerpt");
-      if (excerptKey === "ux.excerpt") return tBlog("posts.ux.excerpt");
-      if (excerptKey === "growth.excerpt") return tBlog("posts.growth.excerpt");
-      if (excerptKey === "ai.excerpt")
-        return "Architecting multi-agent LLM systems with verifiable validation layers and human-in-the-loop telemetry.";
-      if (excerptKey === "frontend.excerpt")
-        return "Tactical patterns for lightning-fast server components, aggressive asset caching, and zero layout shift.";
-      return excerptKey;
-    } catch {
-      return excerptKey;
-    }
-  };
-
-  // Filter & Sort logic
   const filteredArticles = useMemo(() => {
-    let result = ARTICLES.filter((article) => {
-      if (activeCategory === "all") return true;
-      return article.category === activeCategory;
-    });
-
-    result = [...result].sort((a, b) => {
-      if (sortOption === "latest") return b.dateObj.getTime() - a.dateObj.getTime();
-      if (sortOption === "oldest") return a.dateObj.getTime() - b.dateObj.getTime();
-      if (sortOption === "readingTime") return a.readMinutes - b.readMinutes;
-      return 0;
-    });
-
-    return result;
-  }, [activeCategory, sortOption]);
+    return articles
+      .filter((article) => activeCategory === "all" || article.category === activeCategory)
+      .sort((a, b) => {
+        if (sortOption === "oldest") return a.publish_date.localeCompare(b.publish_date);
+        if (sortOption === "readingTime") return a.read_minutes - b.read_minutes;
+        return b.publish_date.localeCompare(a.publish_date);
+      });
+  }, [articles, activeCategory, sortOption]);
 
   return (
     <section className="relative isolate min-h-screen overflow-hidden bg-ink-950 px-6 pt-[120px] pb-[130px] lg:px-10 lg:pt-[150px] lg:pb-[160px]">
@@ -225,7 +95,7 @@ export function BlogsListing() {
             aria-label="Filter blog by category"
             className="flex flex-wrap items-center gap-2 sm:gap-2.5"
           >
-            {CATEGORIES.map(({ key, labelKey }) => {
+            {categories.map((key) => {
               const isActive = activeCategory === key;
               return (
                 <button
@@ -240,7 +110,7 @@ export function BlogsListing() {
                       : "border border-[#232f55] bg-[#111933]/70 text-[#9bb0ff] hover:border-indigo/50 hover:bg-[#162144] hover:text-white"
                   }`}
                 >
-                  {tPage(`categories.${labelKey}`)}
+                  {tPage(`categories.${key}`)}
                 </button>
               );
             })}
@@ -343,9 +213,6 @@ export function BlogsListing() {
         {filteredArticles.length > 0 ? (
           <div className="mt-8 sm:mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-7">
             {filteredArticles.map((article) => {
-              const title = getArticleTitle(article.titleKey);
-              const excerpt = getArticleExcerpt(article.excerptKey);
-
               return (
                 <article
                   key={article.id}
@@ -354,8 +221,8 @@ export function BlogsListing() {
                   {/* Article Thumbnail */}
                   <div className="relative aspect-[16/10] w-full overflow-hidden rounded-[14px]">
                     <Image
-                      src={article.image}
-                      alt={title}
+                      src={imageUrl(article.image_path)}
+                      alt=""
                       fill
                       className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -366,19 +233,19 @@ export function BlogsListing() {
                   <div className="mt-4 flex flex-1 flex-col items-start">
                     {/* Category Tag */}
                     <span
-                      className={`inline-flex items-center rounded-lg bg-gradient-to-r ${article.tagColor} px-2.5 py-0.5 text-[11px] sm:text-[12px] font-semibold text-white shadow-sm`}
+                      className={`inline-flex items-center rounded-lg bg-gradient-to-r ${articleGradients[article.category]} px-2.5 py-0.5 text-[11px] sm:text-[12px] font-semibold text-white shadow-sm`}
                     >
-                      {tPage(`categories.${article.categoryKey}`)}
+                      {tPage(`categories.${article.category}`)}
                     </span>
 
                     {/* Title */}
                     <h2 className="mt-2.5 text-[17px] sm:text-[19px] leading-[25px] sm:leading-[27px] font-bold text-white transition-colors duration-200 group-hover:text-[#6aa3ff]">
-                      {title}
+                      {article.title}
                     </h2>
 
                     {/* Excerpt */}
                     <p className="mt-2 text-[13px] sm:text-[14px] leading-[21px] sm:leading-[22px] text-[#a9b5da] line-clamp-3">
-                      {excerpt}
+                      {article.excerpt}
                     </p>
 
                     {/* Meta Footer */}
@@ -386,21 +253,21 @@ export function BlogsListing() {
                       <div className="flex items-center gap-3">
                         <div className="flex items-center gap-1.5">
                           <CalendarIcon className="h-3.5 w-3.5" />
-                          <span>{article.dateStr}</span>
+                          <time dateTime={article.publish_date}>{formatArticleDate(article.publish_date)}</time>
                         </div>
                         <span aria-hidden="true" className="text-white/20">
                           |
                         </span>
                         <div className="flex items-center gap-1.5">
                           <ClockIcon className="h-3.5 w-3.5" />
-                          <span>{tPage("minRead", { minutes: article.readMinutes })}</span>
+                          <span>{tPage("minRead", { minutes: article.read_minutes })}</span>
                         </div>
                       </div>
 
-                      <span className="flex items-center gap-1 text-[13px] font-medium text-[#6aa3ff] transition-transform duration-200 group-hover:translate-x-1 rtl:group-hover:-translate-x-1">
+                      <Link href={`/blogs/${article.slug}`} aria-label={article.title} className="flex items-center gap-1 text-[13px] font-medium text-[#6aa3ff] transition-transform duration-200 group-hover:translate-x-1 rtl:group-hover:-translate-x-1">
                         <span>{tPage("readArticle")}</span>
                         <ArrowRightBlog className="h-3.5 w-3.5" />
-                      </span>
+                      </Link>
                     </div>
                   </div>
                 </article>

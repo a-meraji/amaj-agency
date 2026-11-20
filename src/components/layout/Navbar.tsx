@@ -19,7 +19,7 @@ const LINKS = [
  *        "Navigation / translucent surface" (mobile 369×51, fully rounded)
  * The capsule is fixed so it stays available while scrolling the single page.
  */
-export function Navbar() {
+export function Navbar({ onHome = false }: { onHome?: boolean }) {
   const t = useTranslations("Nav");
   const [open, setOpen] = useState(false);
   const menuId = "mobile-nav-menu";
@@ -37,6 +37,8 @@ export function Navbar() {
       mq.removeEventListener("change", onMq);
     };
   }, [open]);
+
+  const localHref = (hash: string) => onHome ? hash : `/${hash}`;
 
   // Smooth navigation handler that closes the drawer gracefully before scrolling to target
   const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -88,8 +90,8 @@ export function Navbar() {
           {LINKS.map((link) => (
             <li key={link.key}>
               <a
-                href={link.href}
-                onClick={(e) => handleAnchorClick(e, link.href)}
+                href={localHref(link.href)}
+                onClick={(e) => handleAnchorClick(e, localHref(link.href))}
                 className="group flex items-center gap-[14px] text-ui font-semibold text-[#f3f2f9] transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-periwinkle"
               >
                 <span className="relative">
@@ -107,9 +109,9 @@ export function Navbar() {
         <div className="relative hidden items-center lg:flex">
           <ButtonLink
             variant="nav"
-            href="#contact"
+            href={localHref("#contact")}
             arrow
-            onClick={(e) => handleAnchorClick(e, "#contact")}
+            onClick={(e) => handleAnchorClick(e, localHref("#contact"))}
           >
             {t("cta")}
           </ButtonLink>
@@ -160,8 +162,8 @@ export function Navbar() {
               {LINKS.map((link) => (
                 <li key={link.key}>
                   <a
-                    href={link.href}
-                    onClick={(e) => handleAnchorClick(e, link.href)}
+                    href={localHref(link.href)}
+                    onClick={(e) => handleAnchorClick(e, localHref(link.href))}
                     className="block rounded-[10px] px-3 py-3 text-[17px] font-semibold text-fg transition-colors hover:bg-white/5 active:bg-white/10"
                   >
                     {t(link.key)}
@@ -172,9 +174,9 @@ export function Navbar() {
             <div className="mt-4 flex items-center justify-end border-t border-[#6d7cb0]/30 pt-5">
               <ButtonLink
                 variant="nav"
-                href="#contact"
+                href={localHref("#contact")}
                 arrow
-                onClick={(e) => handleAnchorClick(e, "#contact")}
+                onClick={(e) => handleAnchorClick(e, localHref("#contact"))}
               >
                 {t("cta")}
               </ButtonLink>

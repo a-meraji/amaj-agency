@@ -4,54 +4,12 @@ import Link from "next/link";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { ArrowRightBlog, CalendarIcon, ClockIcon } from "@/components/icons/ui";
 
-interface BlogPostItem {
-  key: "engineering" | "ux" | "growth" | "ai" | "frontend";
-  tagColor: string;
-  image: string;
-  date: string;
-  minutes: number;
-}
+import type { ArticleSummary } from "@/lib/content/database";
+import { articleGradients, formatArticleDate, imageUrl } from "@/lib/content/presentation";
 
-const SECONDARY_POSTS: BlogPostItem[] = [
-  {
-    key: "engineering",
-    tagColor: "from-[#10b981] to-[#34d399]",
-    image: "/images/blog/engineering.webp",
-    date: "Jan 20, 2025",
-    minutes: 6,
-  },
-  {
-    key: "ux",
-    tagColor: "from-[#8b5cf6] to-[#a78bfa]",
-    image: "/images/blog/ux.webp",
-    date: "Jan 15, 2025",
-    minutes: 5,
-  },
-  {
-    key: "growth",
-    tagColor: "from-[#f59e0b] to-[#fbbf24]",
-    image: "/images/blog/growth.webp",
-    date: "Jan 10, 2025",
-    minutes: 6,
-  },
-  {
-    key: "ai",
-    tagColor: "from-[#ec4899] to-[#f472b6]",
-    image: "/images/blog/ai.webp",
-    date: "Jan 05, 2025",
-    minutes: 7,
-  },
-  {
-    key: "frontend",
-    tagColor: "from-[#10b981] to-[#34d399]",
-    image: "/images/blog/frontend.webp",
-    date: "Dec 28, 2024",
-    minutes: 4,
-  },
-];
-
-export async function Blog() {
-  const t = await getTranslations("Blog");
+export async function Blog({ articles }: { articles: ArticleSummary[] }) {
+  const [t, page] = await Promise.all([getTranslations("Blog"), getTranslations("BlogsPage")]);
+  const [featured, ...secondary] = articles;
 
   return (
     <section id="blog" className="relative isolate bg-transparent px-6 lg:px-10">
@@ -99,61 +57,64 @@ export async function Blog() {
           </div>
         </header>
 
-        {/* Featured Blog Post (Card 1: Product Thinking) */}
-        <article className="reveal mt-8 sm:mt-10 lg:mt-12 overflow-hidden rounded-[20px] sm:rounded-[24px] border border-[#232f55] bg-[#0d1633]/85 p-3.5 sm:p-5 lg:p-7 shadow-2xl backdrop-blur-md transition-all duration-300 hover:border-indigo/40">
-          <div className="grid grid-cols-1 items-center gap-4 sm:gap-6 lg:grid-cols-12 lg:gap-8">
-            {/* Image Column */}
-            <div className="relative aspect-[16/10] sm:aspect-[16/9] lg:aspect-[634/260] w-full overflow-hidden rounded-[14px] sm:rounded-[16px] lg:col-span-6">
-              <Image
-                src="/images/blog/featured.webp"
-                alt={t("posts.productThinking.title")}
-                fill
-                priority
-                className="object-cover object-center transition-transform duration-500 hover:scale-105"
-                sizes="(max-width: 1024px) 100vw, 634px"
-              />
-            </div>
+        {featured && (
+          <article className="reveal mt-8 sm:mt-10 lg:mt-12 overflow-hidden rounded-[20px] sm:rounded-[24px] border border-[#232f55] bg-[#0d1633]/85 p-3.5 sm:p-5 lg:p-7 shadow-2xl backdrop-blur-md transition-all duration-300 hover:border-indigo/40">
+            <div className="grid grid-cols-1 items-center gap-4 sm:gap-6 lg:grid-cols-12 lg:gap-8">
+              {/* Image Column */}
+              <div className="relative aspect-[16/10] sm:aspect-[16/9] lg:aspect-[634/260] w-full overflow-hidden rounded-[14px] sm:rounded-[16px] lg:col-span-6">
+                <Image
+                  src={imageUrl(featured.image_path)}
+                  alt=""
+                  fill
+                  priority
+                  className="object-cover object-center transition-transform duration-500 hover:scale-105"
+                  sizes="(max-width: 1024px) 100vw, 634px"
+                />
+              </div>
 
-            {/* Content Column */}
-            <div className="flex flex-col items-start lg:col-span-6">
-              <span className="inline-flex items-center rounded-lg bg-gradient-to-r from-[#4b66f6] to-[#6091fa] px-3 py-0.5 text-[12px] sm:px-3.5 sm:py-1 sm:text-[13px] font-semibold text-white shadow-sm">
-                {t("posts.productThinking.tag")}
-              </span>
-
-              <h3 className="mt-2.5 sm:mt-3 text-[18px] leading-[26px] sm:text-[22px] sm:leading-[30px] font-bold text-white lg:mt-4 lg:text-[30px] lg:leading-[40px] xl:text-[34px] xl:leading-[44px]">
-                {t("posts.productThinking.title")}
-              </h3>
-
-              <p className="mt-1.5 sm:mt-2 text-[13px] leading-[21px] sm:text-[14px] sm:leading-[23px] text-[#a9b5da] lg:mt-3 lg:text-[16px] lg:leading-[26px]">
-                {t("posts.productThinking.excerpt")}
-              </p>
-
-              {/* Meta details (hidden on mobile matching Figma 176:1037) */}
-              <div className="hidden lg:flex mt-5 items-center gap-4 text-[13px] text-[#93a2cf] lg:mt-6 lg:text-[14px]">
-                <div className="flex items-center gap-1.5">
-                  <CalendarIcon className="h-4 w-4" />
-                  <span>Jan 26, 2025</span>
-                </div>
-                <span aria-hidden="true" className="text-white/20">
-                  |
+              {/* Content Column */}
+              <div className="flex flex-col items-start lg:col-span-6">
+                <span className={`inline-flex items-center rounded-lg bg-gradient-to-r ${articleGradients[featured.category]} px-3 py-0.5 text-[12px] sm:px-3.5 sm:py-1 sm:text-[13px] font-semibold text-white shadow-sm`}>
+                  {page(`categories.${featured.category}`)}
                 </span>
-                <div className="flex items-center gap-1.5">
-                  <ClockIcon className="h-4 w-4" />
-                  <span>{t("minRead", { minutes: 8 })}</span>
+
+                <h3 className="mt-2.5 sm:mt-3 text-[18px] leading-[26px] sm:text-[22px] sm:leading-[30px] font-bold text-white lg:mt-4 lg:text-[30px] lg:leading-[40px] xl:text-[34px] xl:leading-[44px]">
+                  <Link href={`/blogs/${featured.slug}`}>{featured.title}</Link>
+                </h3>
+
+                <p className="mt-1.5 sm:mt-2 text-[13px] leading-[21px] sm:text-[14px] sm:leading-[23px] text-[#a9b5da] lg:mt-3 lg:text-[16px] lg:leading-[26px]">
+                  {featured.excerpt}
+                </p>
+
+                {/* Meta details (hidden on mobile matching Figma 176:1037) */}
+                <div className="hidden lg:flex mt-5 items-center gap-4 text-[13px] text-[#93a2cf] lg:mt-6 lg:text-[14px]">
+                  <div className="flex items-center gap-1.5">
+                    <CalendarIcon className="h-4 w-4" />
+                    <time dateTime={featured.publish_date}>{formatArticleDate(featured.publish_date)}</time>
+                  </div>
+                  <span aria-hidden="true" className="text-white/20">
+                    |
+                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <ClockIcon className="h-4 w-4" />
+                    <span>{t("minRead", { minutes: featured.read_minutes })}</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </article>
+          </article>
+        )}
+
+        {!featured && <p className="mt-8 text-[#a9b5da]">{page("noArticles")}</p>}
 
         {/* Secondary Posts (Cards 2 to 6) in a cohesive responsive grid */}
         <div className="mt-4 sm:mt-6 flex flex-col gap-4 sm:gap-5 sm:grid sm:grid-cols-2 lg:grid-cols-6 lg:gap-6">
-          {SECONDARY_POSTS.map(({ key, tagColor, image, date, minutes }, idx) => {
+          {secondary.map((article, idx) => {
             const colSpan = idx < 3 ? "lg:col-span-2" : "sm:col-span-2 lg:col-span-3";
 
             return (
               <article
-                key={key}
+                key={article.id}
                 className={`reveal flex flex-col overflow-hidden rounded-[18px] sm:rounded-[20px] border border-[#232f55] bg-[#0d1633]/85 p-3.5 sm:p-5 shadow-xl backdrop-blur-md transition-all duration-300 hover:border-indigo/40 hover:bg-[#111c40] ${colSpan}`}
                 style={{
                   ["--reveal-start" as string]: `${10 + idx * 5}%`,
@@ -162,8 +123,8 @@ export async function Blog() {
                 {/* Card Image */}
                 <div className="relative aspect-[16/9] w-full overflow-hidden rounded-[12px] sm:rounded-[14px]">
                   <Image
-                    src={image}
-                    alt={t(`posts.${key}.title`)}
+                    src={imageUrl(article.image_path)}
+                    alt=""
                     fill
                     className="object-cover object-center transition-transform duration-500 hover:scale-105"
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px"
@@ -173,19 +134,19 @@ export async function Blog() {
                 {/* Category Tag Pill */}
                 <div className="mt-3">
                   <span
-                    className={`inline-flex items-center rounded-[6px] bg-gradient-to-r ${tagColor} px-2.5 py-0.5 text-[11px] font-semibold text-white shadow-xs`}
+                    className={`inline-flex items-center rounded-[6px] bg-gradient-to-r ${articleGradients[article.category]} px-2.5 py-0.5 text-[11px] font-semibold text-white shadow-xs`}
                   >
-                    {t(`posts.${key}.tag`)}
+                    {page(`categories.${article.category}`)}
                   </span>
                 </div>
 
                 {/* Title & Excerpt */}
                 <h3 className="mt-2 text-[15px] sm:text-[18px] leading-[22px] sm:leading-[26px] font-bold text-white lg:text-[20px] lg:leading-[28px]">
-                  {t(`posts.${key}.title`)}
+                  <Link href={`/blogs/${article.slug}`}>{article.title}</Link>
                 </h3>
 
                 <p className="mt-1.5 text-[12.5px] sm:text-[14px] leading-[19px] sm:leading-[22px] text-[#a9b5da] line-clamp-2">
-                  {t(`posts.${key}.excerpt`)}
+                  {article.excerpt}
                 </p>
 
                 {/* Meta details (hidden on mobile matching Figma 176:1037) */}
@@ -193,14 +154,14 @@ export async function Blog() {
                   <div className="flex items-center gap-4 text-[13px] text-[#93a2cf]">
                     <div className="flex items-center gap-1.5">
                       <CalendarIcon className="h-4 w-4" />
-                      <span>{date}</span>
+                      <time dateTime={article.publish_date}>{formatArticleDate(article.publish_date)}</time>
                     </div>
                     <span aria-hidden="true" className="text-white/20">
                       |
                     </span>
                     <div className="flex items-center gap-1.5">
                       <ClockIcon className="h-4 w-4" />
-                      <span>{t("minRead", { minutes })}</span>
+                      <span>{t("minRead", { minutes: article.read_minutes })}</span>
                     </div>
                   </div>
                 </div>

@@ -1,7 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { Eyebrow } from "@/components/ui/Eyebrow";
-import { GridBackdrop } from "@/components/ui/GridBackdrop";
 import { TeamWatermark } from "@/components/icons/brand";
+import type { StaffMember } from "@/lib/content/database";
 import { TeamCarousel } from "./TeamCarousel";
 
 /*
@@ -9,13 +9,16 @@ import { TeamCarousel } from "./TeamCarousel";
  * Background: #09122f (ink-900) with subtle grid and ambient lighting.
  * Mobile content is shifted up 31px like other sections.
  */
-export async function Team() {
+export async function Team({ members }: { members: StaffMember[] }) {
   const t = await getTranslations("Team");
+  if (members.length === 0) return <div id="team" />;
 
   return (
     <section
       id="team"
-      className="relative isolate bg-transparent h-[240vh] lg:h-[280vh]"
+      className={members.length === 1
+        ? "relative isolate bg-transparent h-screen"
+        : "relative isolate bg-transparent h-[240vh] lg:h-[280vh]"}
     >
       {/* Pinned sticky viewport container: fits viewport on all screens without overflowing */}
       <div className="sticky top-0 flex h-screen lg:h-screen lg:max-h-[941px] flex-col justify-start overflow-hidden lg:overflow-visible">
@@ -43,7 +46,7 @@ export async function Team() {
             </Eyebrow>
           </header>
 
-          <TeamCarousel />
+          <TeamCarousel members={members} />
         </div>
       </div>
     </section>

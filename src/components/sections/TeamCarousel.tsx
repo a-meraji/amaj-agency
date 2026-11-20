@@ -5,35 +5,22 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { TeamWatermark } from "@/components/icons/brand";
 
-const TEAM_MEMBERS = [
-  { key: "amin", image: "/images/team/amin.png" },
-  { key: "sepehr", image: "/images/team/sepehr.png" },
-  { key: "pm", image: "/images/team/parsa.png" },
-  { key: "mobin", image: "/images/team/mobin.png" },
-] as const;
+import type { StaffMember } from "@/lib/content/database";
+import { imageUrl } from "@/lib/content/presentation";
 
-export function TeamCarousel() {
+export function TeamCarousel({ members }: { members: StaffMember[] }) {
   const t = useTranslations("Team");
   const [displayedIndex, setDisplayedIndex] = useState(0);
   const [outgoingIndex, setOutgoingIndex] = useState<number | null>(null);
   const [direction, setDirection] = useState<"next" | "prev">("next");
 
-  const totalMembers = TEAM_MEMBERS.length;
-  const currentMember = TEAM_MEMBERS[displayedIndex % totalMembers];
-  const currentKey = currentMember.key;
-
-  const outgoingMember =
-    outgoingIndex !== null
-      ? TEAM_MEMBERS[outgoingIndex % totalMembers]
-      : null;
-  const outgoingKey = outgoingMember ? outgoingMember.key : null;
+  const totalMembers = members.length;
+  const currentMember = members[displayedIndex] ?? members[0];
+  const outgoingMember = outgoingIndex === null ? null : members[outgoingIndex];
 
   // Refs for stable, non-stale callbacks across wheel, touch, and scroll listeners
-  const displayedIndexRef = useRef(displayedIndex);
-  displayedIndexRef.current = displayedIndex;
-
-  const outgoingIndexRef = useRef(outgoingIndex);
-  outgoingIndexRef.current = outgoingIndex;
+  const displayedIndexRef = useRef(0);
+  const outgoingIndexRef = useRef<number | null>(null);
 
   const transitionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -43,12 +30,15 @@ export function TeamCarousel() {
       if (nextIdx === current || outgoingIndexRef.current !== null) return;
       const determinedDir =
         dir ?? (nextIdx > current ? "next" : "prev");
+      outgoingIndexRef.current = current;
+      displayedIndexRef.current = nextIdx;
       setDirection(determinedDir);
       setOutgoingIndex(current);
       setDisplayedIndex(nextIdx);
 
       if (transitionTimeoutRef.current) clearTimeout(transitionTimeoutRef.current);
       transitionTimeoutRef.current = setTimeout(() => {
+        outgoingIndexRef.current = null;
         setOutgoingIndex(null);
       }, 550);
     },
@@ -58,7 +48,7 @@ export function TeamCarousel() {
   // Scroll-based member switching controller
   useEffect(() => {
     const section = document.getElementById("team");
-    if (!section) return;
+    if (!section || totalMembers < 2) return;
 
     let ticking = false;
     let prevProgress = 0;
@@ -76,16 +66,8 @@ export function TeamCarousel() {
           const scrolled = -rect.top;
           const progress = Math.max(0, Math.min(1, scrolled / scrollDistance));
 
-          // Switch smoothly across members:
-          // For 4 members: 0 (<0.22), 1 (0.28 - 0.48), 2 (0.54 - 0.74), 3 (>0.80)
-          let targetIndex = 0;
-          if (progress > 0.22 && progress <= 0.48) {
-            targetIndex = 1;
-          } else if (progress > 0.48 && progress <= 0.74) {
-            targetIndex = 2;
-          } else if (progress > 0.74) {
-            targetIndex = 3;
-          }
+          const slideProgress = Math.max(0, Math.min(1, (progress - 0.15) / 0.7));
+          const targetIndex = Math.round(slideProgress * (totalMembers - 1));
 
           if (targetIndex !== displayedIndexRef.current && outgoingIndexRef.current === null) {
             const dir = progress > prevProgress ? "next" : "prev";
@@ -102,7 +84,7 @@ export function TeamCarousel() {
     onScroll();
 
     return () => window.removeEventListener("scroll", onScroll);
-  }, [changeSlide]);
+  }, [changeSlide, totalMembers]);
 
   // Cleanup timeout on unmount
   useEffect(() => {
@@ -117,7 +99,7 @@ export function TeamCarousel() {
 
   useEffect(() => {
     const section = document.getElementById("team");
-    if (!section) return;
+    if (!section || totalMembers < 2) return;
 
     const onWheel = (e: WheelEvent) => {
       const rect = section.getBoundingClientRect();
@@ -291,17 +273,17 @@ export function TeamCarousel() {
     }
   };
 
-  const renderControls = () => (
+  const renderControls = () => totalMembers > 1 && (
     <div
       role="group"
       aria-label={t("eyebrow")}
-      className="flex items-center gap-[10px] lg:gap-[14px]"
+      className="flex max-w-full items-center gap-[10px] overflow-x-auto lg:gap-[14px]"
     >
-      {TEAM_MEMBERS.map((_, idx) => {
+      {members.map((member, idx) => {
         const isActive = idx === displayedIndex;
         return (
           <button
-            key={idx}
+            key={member.id}
             type="button"
             onClick={() => {
               changeSlide(idx, idx > displayedIndex ? "next" : "prev");
@@ -314,7 +296,7 @@ export function TeamCarousel() {
                 window.scrollTo({ top: targetY, behavior: "smooth" });
               }
             }}
-            aria-label={`Slide ${idx + 1}`}
+            aria-label={member.name}
             aria-current={isActive}
             className="flex min-h-[36px] min-w-[26px] cursor-pointer items-center justify-center p-1.5 focus-visible:outline-none"
           >
@@ -363,7 +345,7 @@ export function TeamCarousel() {
       : "anim-team-photo-enter-right";
   };
 
-  const renderTextContent = (key: string, isOutgoing: boolean) => (
+  const renderTextContent = (member: StaffMember, isOutgoing: boolean) => (
     <div
       key={isOutgoing ? `out-${outgoingIndex}` : `in-${displayedIndex}`}
       className={`col-start-1 row-start-1 flex flex-col items-start ${getTextAnimationClass(
@@ -371,13 +353,13 @@ export function TeamCarousel() {
       )}`}
     >
       <h2 className="text-[36.5px] leading-[45.6px] font-bold text-[#fcfcff] lg:text-[72px] lg:leading-[81.4px]">
-        {t(`members.${key}.name`)}
+        {member.name}
       </h2>
 
       {/* Role badge with gradient */}
       <div className="mt-[18px] lg:mt-[28px] xl:mt-[46px]">
         <span className="inline-flex items-center justify-center rounded-[9px] bg-gradient-to-r from-[#617af5] to-[#798aff] px-[21px] py-[6px] text-[18px] leading-[22.5px] font-bold text-white shadow-sm lg:rounded-[14px] lg:px-[26px] lg:py-[8px] xl:px-[28px] xl:py-[10px] lg:text-[26px] lg:leading-[32px] xl:text-[32px] xl:leading-[37.3px]">
-          {t(`members.${key}.role`)}
+          {member.role}
         </span>
       </div>
 
@@ -388,14 +370,14 @@ export function TeamCarousel() {
           className="w-[6px] shrink-0 rounded-full bg-[#6a84ff] lg:w-[9px]"
         />
         <p className="max-w-[620px] text-[15px] leading-[24px] font-medium text-[#f1f2fc] lg:max-w-[730px] lg:text-[20px] lg:leading-[36px] xl:text-[24px] xl:leading-[45px]">
-          {t(`members.${key}.bio`)}
+          {member.bio}
         </p>
       </div>
     </div>
   );
 
   const renderPhotoContent = (
-    member: { key: string; image: string },
+    member: StaffMember,
     isOutgoing: boolean
   ) => (
     <div
@@ -405,8 +387,8 @@ export function TeamCarousel() {
       )}`}
     >
       <Image
-        src={member.image}
-        alt={t(`members.${member.key}.name`)}
+        src={imageUrl(member.image_path)}
+        alt=""
         width={1200}
         height={1214}
         priority
@@ -468,6 +450,8 @@ export function TeamCarousel() {
       </div>
     </button>
   );
+
+  if (!currentMember) return null;
 
   return (
     <div
@@ -608,8 +592,8 @@ export function TeamCarousel() {
         <div className="reveal relative z-20 flex flex-col items-start pb-[20px] lg:col-span-7 lg:pb-0">
           {/* Stacked grid for simultaneous text cross-transition */}
           <div className="grid grid-cols-1 grid-rows-1 w-full">
-            {outgoingKey && renderTextContent(outgoingKey, true)}
-            {renderTextContent(currentKey, false)}
+            {outgoingMember && renderTextContent(outgoingMember, true)}
+            {renderTextContent(currentMember, false)}
           </div>
         </div>
 

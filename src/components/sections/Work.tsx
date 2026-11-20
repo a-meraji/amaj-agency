@@ -1,7 +1,6 @@
-import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { Eyebrow } from "@/components/ui/Eyebrow";
-import { GridBackdrop } from "@/components/ui/GridBackdrop";
+import type { Project } from "@/lib/content/database";
 import { WorkCarousel } from "./WorkCarousel";
 
 /*
@@ -9,7 +8,7 @@ import { WorkCarousel } from "./WorkCarousel";
  * Desktop has no grid; its atmosphere is a baked image plus a 380px fade from the
  * Services section's #171b3d. Mobile content is shifted up 31px like other sections.
  */
-export async function Work() {
+export async function Work({ projects }: { projects: Project[] }) {
   const t = await getTranslations("Work");
 
   return (
@@ -37,7 +36,7 @@ export async function Work() {
         </header>
 
         <div className="reveal mt-[56.9px] lg:mt-[50px] [--reveal-end:40%]">
-          <WorkCarousel />
+          {projects.length > 0 && <WorkCarousel projects={projects} />}
         </div>
       </div>
     </section>

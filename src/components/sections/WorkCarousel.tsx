@@ -4,15 +4,10 @@ import Image from "next/image";
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import { useTranslations } from "next-intl";
 
-export type ProjectKey = "mimmo" | "bluerehab" | "rahino" | "audiolog";
-type Slot = "left" | "center" | "right" | "back";
+import type { Project } from "@/lib/content/database";
+import { imageUrl } from "@/lib/content/presentation";
 
-export const PROJECTS: { key: ProjectKey; url: string; thumb: string }[] = [
-  { key: "mimmo", url: "https://mimmoacademy.com/", thumb: "/images/work/mimmo-academy.png" },
-  { key: "bluerehab", url: "https://bluerehab.ir/", thumb: "/images/work/bluerehab-home.png" },
-  { key: "rahino", url: "https://botaava.ir/", thumb: "/images/work/rahino.png" },
-  { key: "audiolog", url: "https://app.audiolog.ir/plans", thumb: "/images/work/audiolog.png" },
-];
+type Slot = "left" | "center" | "right" | "back";
 
 /* ------------------------------------------------------------------------- */
 /* Slot geometry & styling specifications                                    */
@@ -155,21 +150,22 @@ function slotFor(i: number, active: number, total: number): Slot {
 
 /* ------------------------------------------------------------------------- */
 
-export function WorkCarousel() {
+export function WorkCarousel({ projects }: { projects: Project[] }) {
   const t = useTranslations("Work");
-  const [active, setActive] = useState(0); // Start with Mimmo Academy
-  const total = PROJECTS.length;
+  const [selected, setActive] = useState(0);
+  const total = projects.length;
+  const active = selected % total;
   const go = useCallback((delta: number) => setActive((a) => (a + delta + total) % total), [total]);
 
   // Infinite loop auto-advance every 3 seconds
   const [isHovered, setIsHovered] = useState(false);
   useEffect(() => {
-    if (isHovered) return;
+    if (isHovered || total < 2) return;
     const interval = setInterval(() => {
       go(1);
     }, 3000);
     return () => clearInterval(interval);
-  }, [go, isHovered]);
+  }, [go, isHovered, total]);
 
   // Scale fixed geometry to available container width
   const rootRef = useRef<HTMLDivElement>(null);
@@ -234,8 +230,9 @@ export function WorkCarousel() {
     }
   };
 
-  const name = (key: ProjectKey) => t(`projects.${key}.name`);
-  const current = PROJECTS[active];
+  const current = projects[active];
+
+  if (!current) return null;
 
   return (
     <div
@@ -252,7 +249,7 @@ export function WorkCarousel() {
       }}
     >
       <p aria-live="polite" className="sr-only">
-        {t("slideStatus", { name: name(current.key), index: active + 1, total })}
+        {t("slideStatus", { name: current.name, index: active + 1, total })}
       </p>
 
       {/* ---------- Mobile stage ---------- */}
@@ -274,7 +271,7 @@ export function WorkCarousel() {
             transformOrigin: "top center",
           }}
         >
-          {PROJECTS.map((p, i) => {
+          {projects.map((p, i) => {
             const slot = slotFor(i, active, total);
             const s = MOBILE[slot];
             const isCenter = slot === "center";
@@ -291,7 +288,7 @@ export function WorkCarousel() {
 
             return (
               <article
-                key={p.key}
+                key={p.id}
                 aria-hidden={!isCenter}
                 onClick={() => {
                   if (touchMoved.current) return;
@@ -336,8 +333,8 @@ export function WorkCarousel() {
                   }}
                 >
                   <Image
-                    src={p.thumb}
-                    alt={name(p.key)}
+                    src={imageUrl(p.image_path)}
+                    alt={p.name}
                     fill
                     sizes="227px"
                     className="object-cover object-top"
@@ -347,8 +344,8 @@ export function WorkCarousel() {
 
                 <CardText
                   slot={slot}
-                  title={name(p.key)}
-                  description={t(`projects.${p.key}.description`)}
+                  title={p.name}
+                  description={p.description}
                   url={p.url}
                   variant="mobile"
                   specTitle={s.title}
@@ -380,7 +377,7 @@ export function WorkCarousel() {
             transformOrigin: "top center",
           }}
         >
-          {PROJECTS.map((p, i) => {
+          {projects.map((p, i) => {
             const slot = slotFor(i, active, total);
             const s = DESKTOP[slot];
             const isCenter = slot === "center";
@@ -397,7 +394,7 @@ export function WorkCarousel() {
 
             return (
               <article
-                key={p.key}
+                key={p.id}
                 aria-hidden={!isCenter}
                 onClick={() => {
                   if (isCenter) {
@@ -441,8 +438,8 @@ export function WorkCarousel() {
                   }}
                 >
                   <Image
-                    src={p.thumb}
-                    alt={name(p.key)}
+                    src={imageUrl(p.image_path)}
+                    alt={p.name}
                     fill
                     sizes="552px"
                     className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
@@ -455,8 +452,8 @@ export function WorkCarousel() {
 
                 <CardText
                   slot={slot}
-                  title={name(p.key)}
-                  description={t(`projects.${p.key}.description`)}
+                  title={p.name}
+                  description={p.description}
                   url={p.url}
                   variant="desktop"
                   specTitle={s.title}
@@ -470,43 +467,45 @@ export function WorkCarousel() {
       </div>
 
       {/* Desktop Navigation Controls (matching Figma x:697 y:877) */}
-      <div className="mt-8 hidden items-center justify-center gap-6 lg:flex">
-        <button
-          type="button"
-          onClick={() => go(-1)}
-          aria-label={t("previous")}
-          className="flex size-9 cursor-pointer items-center justify-center text-white/70 transition-colors hover:text-white active:scale-95"
-        >
-          <svg className="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M19 12H5M12 19l-7-7 7-7" />
-          </svg>
-        </button>
-        <div className="flex items-center gap-2.5">
-          {PROJECTS.map((_, idx) => (
-            <button
-              key={idx}
-              type="button"
-              onClick={() => setActive(idx)}
-              aria-label={`Project ${idx + 1}`}
-              className={`cursor-pointer rounded-full transition-all duration-300 ${
-                idx === active
-                  ? "h-2 w-2.5 scale-125 bg-[#ab96f9] shadow-[0_0_10px_rgba(171,150,249,0.8)]"
-                  : "h-2 w-2 bg-white/30 hover:bg-white/60"
-              }`}
-            />
-          ))}
+      {total > 1 && (
+        <div className="mt-8 hidden items-center justify-center gap-6 lg:flex">
+          <button
+            type="button"
+            onClick={() => go(-1)}
+            aria-label={t("previous")}
+            className="flex size-9 cursor-pointer items-center justify-center text-white/70 transition-colors hover:text-white active:scale-95"
+          >
+            <svg className="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M19 12H5M12 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <div className="flex max-w-[65%] items-center gap-2.5 overflow-x-auto py-1">
+            {projects.map((project, idx) => (
+              <button
+                key={project.id}
+                type="button"
+                onClick={() => setActive(idx)}
+                aria-label={t("goTo", { name: project.name })}
+                className={`shrink-0 cursor-pointer rounded-full transition-all duration-300 ${
+                  idx === active
+                    ? "h-2 w-2.5 scale-125 bg-[#ab96f9] shadow-[0_0_10px_rgba(171,150,249,0.8)]"
+                    : "h-2 w-2 bg-white/30 hover:bg-white/60"
+                }`}
+              />
+            ))}
+          </div>
+          <button
+            type="button"
+            onClick={() => go(1)}
+            aria-label={t("next")}
+            className="flex size-9 cursor-pointer items-center justify-center text-white/70 transition-colors hover:text-white active:scale-95"
+          >
+            <svg className="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </button>
         </div>
-        <button
-          type="button"
-          onClick={() => go(1)}
-          aria-label={t("next")}
-          className="flex size-9 cursor-pointer items-center justify-center text-white/70 transition-colors hover:text-white active:scale-95"
-        >
-          <svg className="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-        </button>
-      </div>
+      )}
     </div>
   );
 }

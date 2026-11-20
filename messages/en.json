@@ -57,24 +57,6 @@
     "previous": "Previous project",
     "next": "Next project",
     "viewProject": "View {name} case study",
-    "projects": {
-      "mimmo": {
-        "name": "Mimmo Academy",
-        "description": "Comprehensive platform for Italian language\nlearning and certification."
-      },
-      "bluerehab": {
-        "name": "Blue Rehab",
-        "description": "Advanced clinical physical therapy\nand patient recovery system."
-      },
-      "rahino": {
-        "name": "Rahino",
-        "description": "Interactive platform for personal development,\nguided journeys, and digital learning."
-      },
-      "audiolog": {
-        "name": "Audiolog",
-        "description": "Cloud clinical audiology assessment\nand patient management platform."
-      }
-    },
     "carouselLabel": "Featured projects",
     "goTo": "Show {name}",
     "slideStatus": "{name}, project {index} of {total}"
@@ -84,29 +66,7 @@
     "previous": "Previous team member",
     "next": "Next team member",
     "scrollPrompt": "Scroll down",
-    "scrollToTestimonials": "Scroll down to testimonials",
-    "members": {
-      "amin": {
-        "name": "Amin Meraji",
-        "role": "CEO & Founder",
-        "bio": "Leads the company vision, builds the core system architecture, and drives the technical growth of the company. A dedicated technology strategist and systems architect committed to delivering high-impact digital solutions and scaling robust engineering teams."
-      },
-      "sepehr": {
-        "name": "Sepehr Maarefi",
-        "role": "Web Developer",
-        "bio": "Specializes in building robust, performant web applications with intuitive user interfaces and scalable architecture. Focused on writing elegant, maintainable code and leveraging modern web frameworks to craft seamless digital experiences that drive measurable results."
-      },
-      "pm": {
-        "name": "Parsa Taziki",
-        "role": "Project Manager",
-        "bio": "Orchestrates end-to-end product delivery, streamlines cross-functional workflows, and ensures every milestone meets the highest standards of quality. Dedicated to agile execution, transparent communication, and transforming complex project scopes into on-time, high-impact results."
-      },
-      "mobin": {
-        "name": "Mobin Tahmasebi",
-        "role": "Web Developer",
-        "bio": "Architects modern, high-performance web applications with a relentless focus on clean code, responsive user experiences, and cutting-edge front-end technologies. Dedicated to transforming complex designs into fluid, accessible, and scalable digital interfaces."
-      }
-    }
+    "scrollToTestimonials": "Scroll down to testimonials"
   },
   "Testimonials": {
     "eyebrow": "Client testimonials",
@@ -143,66 +103,9 @@
     "titleBold": "Blogs",
     "subtitle": "Articles, ideas, and practical lessons on product, engineering, design, and growth from the Amaj team.",
     "viewAll": "View All",
-    "minRead": "{minutes} min read",
-    "posts": {
-      "productThinking": {
-        "tag": "Product Thinking",
-        "title": "From Ideas to Impact: Our Product Thinking Playbook",
-        "excerpt": "A practical look at how we turn ideas into focused, high-impact products — from discovery and validation to delivery and iteration."
-      },
-      "engineering": {
-        "tag": "Engineering",
-        "title": "Engineering for Scale: Lessons from the Real World",
-        "excerpt": "Key practices and mindset shifts that help us build reliable, scalable systems as we grow."
-      },
-      "ux": {
-        "tag": "UI/UX Design",
-        "title": "A Practical Guide to Better UX",
-        "excerpt": "Simple, high-impact UX principles we apply to create clear, useful, and delightful experiences."
-      },
-      "growth": {
-        "tag": "Growth & Marketing",
-        "title": "Growth: Sustainable Tactics That Work",
-        "excerpt": "A look at the growth strategies that have helped us attract, engage, and retain the right users."
-      },
-      "ai": {
-        "tag": "AI & Automation",
-        "title": "Autonomous AI Agents in Enterprise Workflows",
-        "excerpt": "Architecting multi-agent LLM systems with verifiable validation layers and human-in-the-loop telemetry."
-      },
-      "frontend": {
-        "tag": "Engineering",
-        "title": "Next.js & Turbopack: Building Ultra-Fast Frontends",
-        "excerpt": "Tactical patterns for lightning-fast server components, aggressive asset caching, and zero layout shift."
-      }
-    }
-  },
-  "Contact": {
-    "eyebrow": "Get in touch",
-    "titleLight": "Let's Build Something",
-    "titleBold": "Great Together",
-    "subtitle": "Have a project in mind, an idea to explore, or want to collaborate? Connect with us through any channel below.",
-    "links": {
-      "email": {
-        "label": "Email",
-        "value": "hello@amaj.agency"
-      },
-      "linkedin": {
-        "label": "LinkedIn",
-        "value": "amaj-agency"
-      },
-      "whatsapp": {
-        "label": "WhatsApp",
-        "value": "+98 912 000 0000"
-      },
-      "telegram": {
-        "label": "Telegram",
-        "value": "@amajagency"
-      }
-    }
+    "minRead": "{minutes} min read"
   },
   "Footer": {
-    "tagline": "Engineering Purposeful Digital Solutions.",
     "rights": "All rights reserved.",
     "backToTop": "Back to top ↑",
     "links": {
