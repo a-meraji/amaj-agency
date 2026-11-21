@@ -34,6 +34,11 @@ For this invite-only dashboard, turn off public sign-ups in Supabase Auth. Open
 `/admin` and sign in with the provisioned account. The app checks admin access at
 the dashboard, at each write, and again at the database policy.
 
+In Supabase Authentication, set the site URL to the deployment origin and allow
+`/admin/password/callback` on that origin. The admin sign-in page links to a
+password setup and recovery form. On Vercel the form uses the production
+domain, which you can override with the `SITE_URL` environment variable.
+
 Use **Media library** to upload, open, rename, or remove files. Supported images,
 PDFs, and MP4 or WebM videos can be up to 25 MiB each. Uploaded images can also be
 selected or uploaded from the article, portfolio, and staff editors. Replace an

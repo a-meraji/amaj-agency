@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
+import Link from "next/link";
 import { signIn } from "../auth-actions";
 
 const inputClass = "mt-1 min-h-11 w-full rounded-lg border border-slate-600 bg-slate-950 px-3 py-2 focus-visible:outline-2 focus-visible:outline-indigo-300";
@@ -27,6 +28,7 @@ export function LoginForm({ accessDenied = false }: { accessDenied?: boolean }) 
       <button type="submit" disabled={pending} className="min-h-11 rounded-lg bg-indigo-300 px-4 text-sm font-bold text-slate-950 hover:bg-indigo-200 disabled:opacity-60">
         {pending ? "Signing in…" : "Sign in"}
       </button>
+      <Link href="/admin/password" className="text-sm text-indigo-200 hover:underline">Set or reset your password</Link>
     </form>
   );
 }
