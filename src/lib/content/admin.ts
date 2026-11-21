@@ -33,7 +33,7 @@ export async function getEditableSettings() {
 export async function listMedia({ imagesOnly = false } = {}) {
   const { client } = await requireContentAdmin();
   const query = client.from("media_assets").select("path,label,mime_type,size_bytes,state,created_at,upload_expires_at");
-  const listing = imagesOnly ? query.eq("state", "ready").like("mime_type", "image/%") : query;
+  const listing = imagesOnly ? query.like("mime_type", "image/%") : query;
   const { data, error } = await listing.order("created_at", { ascending: false }).order("path");
   if (error) throw new Error("Unable to load the media library.");
   return data;

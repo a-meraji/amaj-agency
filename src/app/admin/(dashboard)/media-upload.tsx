@@ -2,17 +2,12 @@
 
 import { createClient } from "@supabase/supabase-js";
 import { useRef, useState, useTransition } from "react";
-import type { MediaAsset } from "@/lib/content/database";
 import { isMediaType, mediaBucket, mediaExtensions, mediaMaxBytes } from "@/lib/content/media";
 import { supabaseConfig } from "@/lib/supabase/config";
 import { finishUpload, prepareUpload } from "../media-actions";
+import { secondaryButton } from "./dashboard-ui";
 
-type UploadedAsset = Pick<MediaAsset, "path" | "label" | "mime_type">;
-
-export function MediaUpload({ imagesOnly = false, onUploaded }: {
-  imagesOnly?: boolean;
-  onUploaded?: (asset: UploadedAsset) => void;
-}) {
+export function MediaUpload({ imagesOnly = false }: { imagesOnly?: boolean }) {
   const input = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File>();
   const [message, setMessage] = useState("");
@@ -53,7 +48,6 @@ export function MediaUpload({ imagesOnly = false, onUploaded }: {
           return;
         }
 
-        onUploaded?.(result.asset);
         if (input.current) input.current.value = "";
         setFile(undefined);
         setMessage("Upload complete.");
@@ -74,14 +68,14 @@ export function MediaUpload({ imagesOnly = false, onUploaded }: {
           accept={accept}
           disabled={pending}
           onChange={event => { setFile(event.currentTarget.files?.[0]); setMessage(""); setError(false); }}
-          className="w-full text-sm text-fg-muted-blue file:me-3 file:min-h-[44px] file:rounded-lg file:border-0 file:bg-ink-700 file:px-3 file:text-fg"
+          className="w-full min-w-0 rounded-sm text-sm text-fg-muted-blue focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-periwinkle file:me-3 file:min-h-[44px] file:rounded-lg file:border-0 file:bg-ink-700 file:px-3 file:text-fg"
         />
       </label>
       <button
         type="button"
         disabled={!file || pending}
         onClick={upload}
-        className="min-h-[44px] justify-self-start rounded-lg border border-line-strong px-3 text-sm font-semibold hover:bg-ink-700 disabled:opacity-50"
+        className={secondaryButton + " justify-self-start"}
       >
         {pending ? "Uploading…" : "Upload file"}
       </button>

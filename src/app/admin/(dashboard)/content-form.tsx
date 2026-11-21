@@ -4,7 +4,9 @@ import { useActionState, useState } from "react";
 import type { MediaAsset } from "@/lib/content/database";
 import type { EditorField } from "@/lib/content/editor-fields";
 import { adminInput, adminPanel, primaryButton } from "./dashboard-ui";
-import { MediaUpload } from "./media-upload";
+import { isContentImagePath } from "@/lib/content/media";
+import { MediaPicker } from "./media-picker";
+import { MediaPreview } from "./media-preview";
 
 type Values = Partial<Record<string, string | number | boolean>>;
 type FormState = { message?: string; fields?: Record<string, string> };
@@ -21,7 +23,7 @@ export function ContentForm({
   fields: EditorField[];
   initial: Values;
   save: SaveAction;
-  images?: Pick<MediaAsset, "path" | "label">[];
+  images?: MediaAsset[];
 }) {
   const [feedback, action, pending] = useActionState(save, {});
   const [values, setValues] = useState(initial);
@@ -66,33 +68,27 @@ function ImageField({ field, value, error, images, change }: {
   field: EditorField;
   value: string;
   error?: string;
-  images: Pick<MediaAsset, "path" | "label">[];
+  images: MediaAsset[];
   change: (value: string) => void;
 }) {
-  const [uploads, setUploads] = useState<Pick<MediaAsset, "path" | "label">[]>([]);
-  const available = [...uploads, ...images.filter(image => !uploads.some(upload => upload.path === image.path))];
-
   return (
-    <fieldset className="grid gap-4 rounded-lg border border-line p-4">
+    <fieldset className="grid min-w-0 gap-4 rounded-lg border border-line p-4 sm:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] sm:items-start">
       <legend className="px-1 text-sm font-semibold">{field.label}</legend>
-      {available.length > 0 && (
-        <label className="grid gap-1.5 text-sm font-semibold">
-          Select from media library
-          <select
-            className={controlClass}
-            value={available.some(image => image.path === value) ? value : ""}
-            onChange={event => change(event.target.value)}
-          >
-            <option value="" disabled>Choose an image</option>
-            {available.map(image => <option key={image.path} value={image.path}>{image.label}</option>)}
-          </select>
-        </label>
-      )}
-      <Field field={{ ...field, label: "Image path" }} value={value} error={error} change={path => change(String(path))} />
-      <MediaUpload imagesOnly onUploaded={asset => {
-        setUploads(current => [asset, ...current]);
-        change(asset.path);
-      }} />
+      <MediaPreview
+        path={isContentImagePath(value) ? value : undefined}
+        label={field.label}
+        image
+        emptyMessage={value ? "Enter a valid image path to preview it." : "No image selected"}
+      />
+      <div className="grid min-w-0 gap-3">
+        <MediaPicker assets={images} value={value} onSelect={change} />
+        <details open={error ? true : undefined}>
+          <summary className="min-h-[44px] cursor-pointer py-3 text-sm font-semibold text-fg-muted-blue focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-periwinkle">
+            Enter an image path
+          </summary>
+          <Field field={{ ...field, optional: true, max: 512, label: "Image path" }} value={value} error={error} change={path => change(String(path))} />
+        </details>
+      </div>
     </fieldset>
   );
 }

@@ -15,13 +15,13 @@ export default async function EditEntryPage({ params }: { params: Promise<{ coll
   const collection = parsed.data;
   const isNew = id === "new";
   if (!isNew && !recordIdSchema.safeParse(id).success) notFound();
+  const { label, singular, fields } = collections[collection];
   const [entry, images] = await Promise.all([
     isNew ? null : getEntry(collection, id),
-    collection === "contact_links" ? [] : listMedia({ imagesOnly: true }),
+    fields.some(field => field.kind === "image") ? listMedia({ imagesOnly: true }) : [],
   ]);
   if (!isNew && !entry) notFound();
 
-  const { label, singular, fields } = collections[collection];
   const initial = entry ?? (collection === "articles" ? { publish_date: new Date().toISOString().slice(0, 10) } : {});
 
   return (

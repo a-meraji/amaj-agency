@@ -52,7 +52,7 @@ export async function finishUpload(path: string): Promise<{ asset?: Pick<MediaAs
     .update({ state: "ready" }).eq("path", path).in("state", ["pending", "ready"]).select("path").maybeSingle();
   if (updateError || !ready) return { error: "The upload changed while it was being verified. Refresh the library." };
 
-  revalidatePath("/admin/media");
+  revalidatePath("/admin", "layout");
   return { asset: { path, label, mime_type } };
 }
 
@@ -66,7 +66,7 @@ export async function renameMedia(path: string, _previous: MediaFeedback, form: 
   const { data, error } = await client.from("media_assets")
     .update({ label: label.data }).eq("path", path).eq("state", "ready").select("path").maybeSingle();
   if (error || !data) return { error: "The label could not be updated." };
-  revalidatePath("/admin/media");
+  revalidatePath("/admin", "layout");
   return { message: "Label saved." };
 }
 
@@ -81,7 +81,7 @@ export async function deleteMedia(path: string): Promise<MediaFeedback> {
   if (error) return { error: "The file could not be marked for deletion." };
   if (!asset) return { message: "File deleted." };
 
-  revalidatePath("/admin/media");
+  revalidatePath("/admin", "layout");
   const { error: removeError } = await client.storage.from(mediaBucket).remove([path]);
   if (removeError) return { error: "Storage could not delete the file. Retry from the media library." };
 
@@ -92,6 +92,6 @@ export async function deleteMedia(path: string): Promise<MediaFeedback> {
   }
   const { error: cleanupError } = await client.from("media_assets").delete().eq("path", path);
   if (cleanupError) return { error: "The file was removed. Retry to clear its library record." };
-  revalidatePath("/admin/media");
+  revalidatePath("/admin", "layout");
   return { message: "File deleted." };
 }

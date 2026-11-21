@@ -18,3 +18,11 @@ export function isMediaType(type: string): type is keyof typeof mediaExtensions 
 
 export const managedPathPattern =
   /^media\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.(avif|gif|jpg|png|webp|pdf|mp4|webm)$/;
+
+const contentImagePattern = /^(?:\/images|media)\/[a-z0-9_-]+(?:\/[a-z0-9_-]+)*\.(?:avif|gif|jpe?g|png|webp)$/i;
+
+export function isContentImagePath(path: string) {
+  return path.length <= 512
+    && (path.startsWith("/images/") || path.startsWith("media/"))
+    && contentImagePattern.test(path);
+}
