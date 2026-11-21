@@ -47,6 +47,14 @@ const schemas = {
     image_path: imagePath,
     sort_order: sortOrder,
   }),
+  testimonials: z.object({
+    ...entry,
+    name: text(150),
+    role: text(160),
+    quote: text(1000),
+    image_path: imagePath,
+    sort_order: sortOrder,
+  }),
   contact_links: z.object({
     ...entry,
     label: text(80),
@@ -60,6 +68,7 @@ export const entrySchema = z.discriminatedUnion("collection", [
   z.object({ collection: z.literal("articles"), fields: schemas.articles }),
   z.object({ collection: z.literal("projects"), fields: schemas.projects }),
   z.object({ collection: z.literal("staff"), fields: schemas.staff }),
+  z.object({ collection: z.literal("testimonials"), fields: schemas.testimonials }),
   z.object({ collection: z.literal("contact_links"), fields: schemas.contact_links }),
 ]);
 

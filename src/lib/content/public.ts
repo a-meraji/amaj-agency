@@ -44,6 +44,15 @@ export const getPublishedArticle = cache(async (slug: string) => {
     .maybeSingle());
 });
 
+export async function getPublishedTestimonials() {
+  const db = await publicClient();
+  return read(await db.from("testimonials")
+    .select("id,name,role,quote,image_path")
+    .eq("is_published", true)
+    .order("sort_order")
+    .order("slug")) ?? [];
+}
+
 export async function getSiteSettings() {
   const db = await publicClient();
   return read(await db.from("site_settings").select("*").eq("id", 1).maybeSingle());

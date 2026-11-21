@@ -73,29 +73,7 @@
     "titleLine1": "What Our",
     "titleBold": "Clients",
     "titleEnd": "Say",
-    "subtitle": "Real feedback from the people we’ve worked with.",
-    "items": {
-      "reza": {
-        "quote": "Amaj brought clarity and structure to our product vision. The results exceeded our expectations.",
-        "name": "Reza Jalali",
-        "role": "Founder, Betarik"
-      },
-      "muhammad": {
-        "quote": "Their team quickly understood our needs and delivered a high-quality, scalable solution.",
-        "name": "Muhammad Hashemi",
-        "role": "Business Owner, Mimmo Academy"
-      },
-      "mojtaba": {
-        "quote": "Professional, responsive, and truly committed to delivering real value.",
-        "name": "Mojtaba Farei",
-        "role": "Business Owner, DrWatch"
-      },
-      "sara": {
-        "quote": "They turned a complex idea into a simple, user-friendly experience.",
-        "name": "Sara Kiani",
-        "role": "Product Manager, Finly"
-      }
-    }
+    "subtitle": "Real feedback from the people we’ve worked with."
   },
   "Blog": {
     "eyebrow": "Amaj blog",

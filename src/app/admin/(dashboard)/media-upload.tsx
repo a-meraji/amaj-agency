@@ -74,14 +74,14 @@ export function MediaUpload({ imagesOnly = false, onUploaded }: {
           accept={accept}
           disabled={pending}
           onChange={event => { setFile(event.currentTarget.files?.[0]); setMessage(""); setError(false); }}
-          className="w-full text-sm text-slate-300 file:me-3 file:min-h-10 file:rounded-lg file:border-0 file:bg-slate-800 file:px-3 file:text-slate-100"
+          className="w-full text-sm text-fg-muted-blue file:me-3 file:min-h-[44px] file:rounded-lg file:border-0 file:bg-ink-700 file:px-3 file:text-fg"
         />
       </label>
       <button
         type="button"
         disabled={!file || pending}
         onClick={upload}
-        className="min-h-10 justify-self-start rounded-lg border border-slate-600 px-3 text-sm font-semibold hover:bg-slate-800 disabled:opacity-50"
+        className="min-h-[44px] justify-self-start rounded-lg border border-line-strong px-3 text-sm font-semibold hover:bg-ink-700 disabled:opacity-50"
       >
         {pending ? "Uploading…" : "Upload file"}
       </button>

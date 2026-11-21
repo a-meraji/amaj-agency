@@ -4,7 +4,7 @@ import { useActionState, useState, useTransition } from "react";
 import type { MediaAsset } from "@/lib/content/database";
 import { deleteMedia, finishUpload, renameMedia } from "../../media-actions";
 
-const buttonClass = "min-h-10 rounded-lg border border-slate-600 px-3 text-sm font-semibold hover:bg-slate-800 disabled:opacity-60";
+const buttonClass = "min-h-[44px] rounded-lg border border-line-strong px-3 text-sm font-semibold hover:bg-ink-700 disabled:opacity-60";
 
 export function MediaControls({ asset }: { asset: MediaAsset }) {
   const [feedback, rename, renaming] = useActionState(renameMedia.bind(null, asset.path), {});
@@ -31,7 +31,7 @@ export function MediaControls({ asset }: { asset: MediaAsset }) {
         <form action={rename} className="flex flex-wrap items-end gap-2">
           <label className="grid min-w-0 flex-1 gap-1 text-sm font-semibold">
             File label
-            <input name="label" defaultValue={asset.label} maxLength={180} required className="min-h-10 min-w-0 rounded-lg border border-slate-600 bg-slate-950 px-3" />
+            <input name="label" defaultValue={asset.label} maxLength={180} required className="min-h-[44px] min-w-0 rounded-lg border border-line-strong bg-ink-950 px-3" />
           </label>
           <button type="submit" disabled={renaming || busy} className={buttonClass}>{renaming ? "Saving…" : "Rename"}</button>
         </form>
@@ -44,8 +44,8 @@ export function MediaControls({ asset }: { asset: MediaAsset }) {
       ) : (
         <details>
           <summary className="cursor-pointer text-sm font-semibold text-rose-200">Delete file</summary>
-          <p className="mt-2 text-sm text-slate-300">This removes the file from the media library.</p>
-          <button type="button" disabled={busy || renaming} onClick={remove} className="mt-2 min-h-10 rounded-lg bg-rose-300 px-3 text-sm font-bold text-slate-950 disabled:opacity-60">Confirm delete</button>
+          <p className="mt-2 text-sm text-fg-muted-blue">This removes the file from the media library.</p>
+          <button type="button" disabled={busy || renaming} onClick={remove} className="mt-2 min-h-[44px] rounded-lg bg-rose-300 px-3 text-sm font-bold text-ink-950 disabled:opacity-60">Confirm delete</button>
         </details>
       )}
       {error && <p role="alert" className="text-sm text-rose-200">{error}</p>}

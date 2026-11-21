@@ -8,7 +8,7 @@ export default async function SiteSettingsPage({ searchParams }: { searchParams:
 
   return (
     <>
-      <h1 className="text-3xl font-bold">Site settings</h1>
+      <h1 className="text-[28px] leading-tight font-bold tracking-tight sm:text-h2">Site settings</h1>
       {query.saved === "1" && <p role="status" className="mt-3 text-emerald-200">Settings saved.</p>}
       <ContentForm fields={settingsFields} initial={settings ?? {}} save={saveSettings} />
     </>

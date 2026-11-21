@@ -27,6 +27,10 @@ function writeEntry(client: AdminClient, entry: z.output<typeof entrySchema>, id
       const table = client.from("staff");
       return id === null ? table.insert(entry.fields) : table.update(entry.fields).eq("id", id);
     }
+    case "testimonials": {
+      const table = client.from("testimonials");
+      return id === null ? table.insert(entry.fields) : table.update(entry.fields).eq("id", id);
+    }
     case "contact_links": {
       const table = client.from("contact_links");
       return id === null ? table.insert(entry.fields) : table.update(entry.fields).eq("id", id);
@@ -34,8 +38,9 @@ function writeEntry(client: AdminClient, entry: z.output<typeof entrySchema>, id
   }
 }
 
-function refreshPublicPages() {
+function refreshPublicPages(collection?: Collection) {
   revalidatePath("/");
+  if (collection === "testimonials") return;
   revalidatePath("/blogs");
   revalidatePath("/blogs/[slug]", "page");
 }
@@ -61,7 +66,7 @@ export async function saveEntry(
   }
   if (error || !data) return { message: "The entry could not be saved. It may have been removed." };
 
-  refreshPublicPages();
+  refreshPublicPages(collection);
   revalidatePath(`/admin/${collection}`);
   redirect(`/admin/${collection}`);
 }
@@ -74,7 +79,7 @@ export async function deleteEntry(collection: Collection, id: string): Promise<E
   const { error } = await client.from(collection).delete().eq("id", id);
   if (error) return { message: "The entry could not be deleted." };
 
-  refreshPublicPages();
+  refreshPublicPages(collection);
   revalidatePath(`/admin/${collection}`);
   redirect(`/admin/${collection}`);
 }

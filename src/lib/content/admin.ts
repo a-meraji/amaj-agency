@@ -8,6 +8,7 @@ export async function listEntries(collection: Collection) {
     articles: () => client.from("articles").select("id,slug,is_published,label:title").order("publish_date", { ascending: false }),
     projects: () => client.from("projects").select("id,slug,is_published,label:name").order("sort_order"),
     staff: () => client.from("staff").select("id,slug,is_published,label:name").order("sort_order"),
+    testimonials: () => client.from("testimonials").select("id,slug,is_published,label:name").order("sort_order"),
     contact_links: () => client.from("contact_links").select("id,slug,is_published,label").order("sort_order"),
   };
   const { data, error } = await listings[collection]().order("slug");

@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { Suspense } from "react";
+import { LogoMark } from "@/components/icons/brand";
 import { requireContentAdmin } from "@/lib/content/authorization";
-import { collectionNames, collections } from "@/lib/content/editor-fields";
 import { signOut } from "../auth-actions";
+import { DashboardNav } from "./dashboard-nav";
+import { DashboardIcon, secondaryButton } from "./dashboard-ui";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -16,31 +18,30 @@ async function DashboardShell({ children }: { children: React.ReactNode }) {
   const { user } = await requireContentAdmin();
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-6 sm:px-8">
-      <header className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-700 pb-5">
-        <div className="min-w-0">
-          <Link href="/admin" className="text-xl font-bold">Amaj content admin</Link>
-          {user.email && <p className="break-all text-sm text-slate-300">{user.email}</p>}
-        </div>
-        <div className="flex items-center gap-4 text-sm">
-          <Link href="/" className="text-indigo-200 hover:underline">View site</Link>
+    <div className="min-h-dvh bg-ink-900 text-fg">
+      <a href="#admin-content" className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-3 focus:z-50 focus:rounded-sm focus:bg-ink-950 focus:p-3 focus:text-fg">Skip to content</a>
+      <header className="sticky top-0 z-30 flex h-[64px] items-center justify-between gap-2 border-b border-line bg-ink-950 px-3 sm:gap-4 sm:px-6">
+        <Link href="/admin" className="flex min-h-[44px] min-w-0 items-center gap-2 rounded-sm font-bold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-periwinkle sm:gap-3">
+          <LogoMark className="h-6 w-7 shrink-0 text-periwinkle" />
+          <span className="truncate">Amaj Admin</span>
+        </Link>
+        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+          {user.email && <span className="hidden max-w-64 truncate text-sm text-fg-muted-blue md:block" title={user.email}>{user.email}</span>}
+          <Link href="/" aria-label="View site" className={secondaryButton}>
+            <DashboardIcon name="external" className="size-4" /><span className="hidden sm:inline">View site</span>
+          </Link>
           <form action={signOut}>
-            <button type="submit" className="min-h-10 rounded-lg border border-slate-600 px-3 hover:bg-slate-800">Sign out</button>
+            <button type="submit" className={secondaryButton} aria-label="Sign out">
+              <DashboardIcon name="logout" className="size-4" /><span className="hidden sm:inline">Sign out</span>
+            </button>
           </form>
         </div>
       </header>
-      <div className="grid gap-6 py-6 md:grid-cols-[10rem_minmax(0,1fr)]">
-        <nav aria-label="Admin navigation" className="flex flex-wrap content-start gap-2 md:flex-col">
-          <Link className="rounded-lg px-3 py-2 text-sm hover:bg-slate-800" href="/admin">Overview</Link>
-          {collectionNames.map(collection => (
-            <Link key={collection} className="rounded-lg px-3 py-2 text-sm hover:bg-slate-800" href={`/admin/${collection}`}>
-              {collections[collection].label}
-            </Link>
-          ))}
-          <Link className="rounded-lg px-3 py-2 text-sm hover:bg-slate-800" href="/admin/settings">Site settings</Link>
-          <Link className="rounded-lg px-3 py-2 text-sm hover:bg-slate-800" href="/admin/media">Media library</Link>
-        </nav>
-        <main>{children}</main>
+      <div className="lg:grid lg:grid-cols-[240px_minmax(0,1fr)] xl:grid-cols-[256px_minmax(0,1fr)]">
+        <Suspense fallback={null}><DashboardNav /></Suspense>
+        <main id="admin-content" className="min-w-0 scroll-mt-[64px] px-4 py-6 sm:px-6 sm:py-8 lg:px-8 xl:px-10">
+          {children}
+        </main>
       </div>
     </div>
   );

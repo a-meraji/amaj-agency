@@ -3,13 +3,14 @@
 import { useActionState, useState } from "react";
 import type { MediaAsset } from "@/lib/content/database";
 import type { EditorField } from "@/lib/content/editor-fields";
+import { adminInput, adminPanel, primaryButton } from "./dashboard-ui";
 import { MediaUpload } from "./media-upload";
 
 type Values = Partial<Record<string, string | number | boolean>>;
 type FormState = { message?: string; fields?: Record<string, string> };
 type SaveAction = (state: FormState, form: FormData) => Promise<FormState>;
 
-const controlClass = "block w-full rounded-lg border border-slate-600 bg-slate-950 px-3 py-2 text-slate-100 focus-visible:outline-2 focus-visible:outline-indigo-300 aria-invalid:border-rose-400";
+const controlClass = adminInput;
 
 export function ContentForm({
   fields,
@@ -26,27 +27,35 @@ export function ContentForm({
   const [values, setValues] = useState(initial);
 
   return (
-    <form action={action} className="mt-6 grid gap-5 rounded-xl border border-slate-700 bg-[#111a31] p-4 sm:p-6">
-      {fields.map(field => field.kind === "image" ? (
-        <ImageField
-          key={field.name}
-          field={field}
-          value={String(values[field.name] ?? "")}
-          error={feedback.fields?.[field.name]}
-          images={images}
-          change={value => setValues(current => ({ ...current, [field.name]: value }))}
-        />
-      ) : (
-        <Field
-          key={field.name}
-          field={field}
-          value={values[field.name] ?? field.defaultValue ?? ""}
-          error={feedback.fields?.[field.name]}
-          change={value => setValues(current => ({ ...current, [field.name]: value }))}
-        />
-      ))}
-      {feedback.message && <p role="alert" className="text-sm text-rose-200">{feedback.message}</p>}
-      <button type="submit" disabled={pending} className="min-h-11 justify-self-start rounded-lg bg-indigo-300 px-5 text-sm font-bold text-slate-950 hover:bg-indigo-200 disabled:opacity-60">
+    <form action={action} className={adminPanel + " mt-6 grid gap-5 p-4 sm:p-6 lg:grid-cols-2"}>
+      {fields.map(field => {
+        const wide = field.kind === "image" || field.kind === "textarea";
+        const change = (value: string | boolean) =>
+          setValues(current => ({ ...current, [field.name]: value }));
+
+        return (
+          <div key={field.name} className={wide ? "min-w-0 lg:col-span-2" : "min-w-0"}>
+            {field.kind === "image" ? (
+              <ImageField
+                field={field}
+                value={String(values[field.name] ?? "")}
+                error={feedback.fields?.[field.name]}
+                images={images}
+                change={change}
+              />
+            ) : (
+              <Field
+                field={field}
+                value={values[field.name] ?? field.defaultValue ?? ""}
+                error={feedback.fields?.[field.name]}
+                change={change}
+              />
+            )}
+          </div>
+        );
+      })}
+      {feedback.message && <p role="alert" className="text-sm text-rose-200 lg:col-span-2">{feedback.message}</p>}
+      <button type="submit" disabled={pending} className={primaryButton + " justify-self-start lg:col-span-2"}>
         {pending ? "Saving…" : "Save changes"}
       </button>
     </form>
@@ -64,7 +73,7 @@ function ImageField({ field, value, error, images, change }: {
   const available = [...uploads, ...images.filter(image => !uploads.some(upload => upload.path === image.path))];
 
   return (
-    <fieldset className="grid gap-4 rounded-lg border border-slate-700 p-4">
+    <fieldset className="grid gap-4 rounded-lg border border-line p-4">
       <legend className="px-1 text-sm font-semibold">{field.label}</legend>
       {available.length > 0 && (
         <label className="grid gap-1.5 text-sm font-semibold">
@@ -103,8 +112,8 @@ function Field({
   const id = `field-${name}`;
   if (kind === "checkbox") {
     return (
-      <label className="flex min-h-10 items-center gap-3 text-sm font-semibold">
-        <input type="checkbox" name={name} checked={Boolean(value)} onChange={event => change(event.target.checked)} className="size-4 accent-indigo-300" />
+      <label className="flex min-h-[44px] items-center gap-3 text-sm font-semibold">
+        <input type="checkbox" name={name} checked={Boolean(value)} onChange={event => change(event.target.checked)} className="size-5 shrink-0 accent-periwinkle focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-periwinkle" />
         {label}
       </label>
     );
@@ -141,7 +150,7 @@ function Field({
           onChange={event => change(event.target.value)}
         />
       )}
-      {(error || help) && <p id={descriptionId} className={error ? "text-sm text-rose-200" : "text-sm text-slate-300"}>{error || help}</p>}
+      {(error || help) && <p id={descriptionId} className={error ? "text-sm text-rose-200" : "text-sm text-fg-muted-blue"}>{error || help}</p>}
     </div>
   );
 }
@@ -156,12 +165,12 @@ export function DeleteForm({
   const [feedback, action, pending] = useActionState(remove, {});
 
   return (
-    <details className="mt-6 rounded-xl border border-slate-700 p-4">
+    <details className="mt-6 rounded-xl border border-line p-4">
       <summary className="cursor-pointer text-sm font-semibold text-rose-200">Delete {label}</summary>
       <form action={action} className="mt-4">
-        <p className="text-sm text-slate-300">Delete this entry permanently?</p>
+        <p className="text-sm text-fg-muted-blue">Delete this entry permanently?</p>
         {feedback.message && <p role="alert" className="mt-2 text-sm text-rose-200">{feedback.message}</p>}
-        <button type="submit" disabled={pending} className="mt-3 min-h-10 rounded-lg bg-rose-300 px-4 text-sm font-bold text-slate-950 disabled:opacity-60">
+        <button type="submit" disabled={pending} className="mt-3 min-h-[44px] rounded-lg bg-rose-300 px-4 text-sm font-bold text-ink-950 disabled:opacity-60">
           {pending ? "Deleting…" : "Confirm delete"}
         </button>
       </form>

@@ -13,7 +13,7 @@ type EditorField = {
   defaultValue?: string | number;
 };
 
-export const collectionNames = ["articles", "projects", "staff", "contact_links"] as const;
+export const collectionNames = ["articles", "projects", "staff", "testimonials", "contact_links"] as const;
 export type Collection = (typeof collectionNames)[number];
 export const collectionSchema = z.enum(collectionNames);
 
@@ -61,6 +61,19 @@ export const collections: Record<Collection, { label: string; singular: string; 
       { name: "role", label: "Role", max: 120 },
       { name: "bio", label: "Biography", kind: "textarea", max: 3000 },
       image,
+      order,
+      published,
+    ],
+  },
+  testimonials: {
+    label: "Testimonials",
+    singular: "testimonial",
+    fields: [
+      { name: "name", label: "Customer name", max: 150 },
+      slug,
+      { name: "role", label: "Role and company", max: 160 },
+      { name: "quote", label: "Testimonial", kind: "textarea", max: 1000 },
+      { ...image, label: "Customer photo" },
       order,
       published,
     ],

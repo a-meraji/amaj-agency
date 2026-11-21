@@ -26,8 +26,8 @@ export default async function EditEntryPage({ params }: { params: Promise<{ coll
 
   return (
     <>
-      <Link href={`/admin/${collection}`} className="text-sm text-indigo-200 hover:underline">← {label}</Link>
-      <h1 className="mt-2 text-3xl font-bold">{isNew ? "New" : "Edit"} {singular}</h1>
+      <Link href={`/admin/${collection}`} className="text-sm text-periwinkle hover:underline">← {label}</Link>
+      <h1 className="mt-2 text-[28px] leading-tight font-bold tracking-tight sm:text-h2">{isNew ? "New" : "Edit"} {singular}</h1>
       <ContentForm key={id} fields={fields} initial={initial} images={images} save={saveEntry.bind(null, collection, isNew ? null : id)} />
       {entry && <DeleteForm label={singular} remove={deleteEntry.bind(null, collection, id)} />}
     </>

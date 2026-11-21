@@ -390,6 +390,11 @@ html {
   }
 }
 
+/* The admin uses the viewport at its native size. */
+html:has(#admin-layout) {
+  zoom: 1;
+}
+
 body {
   font-family: var(--font-sans);
   overflow-x: clip;

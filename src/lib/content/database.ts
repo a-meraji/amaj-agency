@@ -39,6 +39,14 @@ export type StaffMember = ContentEntry & {
   sort_order: number;
 };
 
+export type Testimonial = ContentEntry & {
+  name: string;
+  role: string;
+  quote: string;
+  image_path: string;
+  sort_order: number;
+};
+
 export type ContactLink = ContentEntry & {
   label: string;
   kind: ContactKind;
@@ -80,6 +88,7 @@ export type Database = {
       articles: Table<Article, EntryDefaults | "body" | "publish_date" | "read_minutes" | "is_featured">;
       projects: Table<Project, EntryDefaults | "sort_order">;
       staff: Table<StaffMember, EntryDefaults | "sort_order">;
+      testimonials: Table<Testimonial, EntryDefaults | "sort_order">;
       contact_links: Table<ContactLink, EntryDefaults | "sort_order">;
       site_settings: Table<SiteSettings, "id">;
       media_assets: {
