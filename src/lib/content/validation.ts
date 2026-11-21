@@ -10,7 +10,10 @@ const entry = {
   slug: text(100).regex(/^[a-z0-9]+(-[a-z0-9]+)*$/),
   is_published: asBoolean,
 };
-const imagePath = z.string().max(512).regex(/^(?:\/images|media)\/[a-zA-Z0-9_-]+(?:\/[a-zA-Z0-9_-]+)*\.(?:avif|gif|jpe?g|png|webp)$/i);
+const imagePath = z.string().max(512).regex(/^(?:\/images|media)\/[a-zA-Z0-9_-]+(?:\/[a-zA-Z0-9_-]+)*\.(?:avif|gif|jpe?g|png|webp)$/i)
+  .refine(path => path.startsWith("/images/") || path.startsWith("media/"), {
+    message: "Use an image from the media library or a path starting with /images/.",
+  });
 const sortOrder = integer(0, 2147483647);
 const projectUrl = text(2048).pipe(z.url({ protocol: /^https?$/, hostname: z.regexes.domain }));
 const contactUrl = z.union([

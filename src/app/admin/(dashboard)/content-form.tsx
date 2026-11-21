@@ -166,11 +166,11 @@ export function DeleteForm({
 
   return (
     <details className="mt-6 rounded-xl border border-line p-4">
-      <summary className="cursor-pointer text-sm font-semibold text-rose-200">Delete {label}</summary>
+      <summary className="min-h-[44px] cursor-pointer py-3 text-sm font-semibold text-rose-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-periwinkle">Delete {label}</summary>
       <form action={action} className="mt-4">
         <p className="text-sm text-fg-muted-blue">Delete this entry permanently?</p>
         {feedback.message && <p role="alert" className="mt-2 text-sm text-rose-200">{feedback.message}</p>}
-        <button type="submit" disabled={pending} className="mt-3 min-h-[44px] rounded-lg bg-rose-300 px-4 text-sm font-bold text-ink-950 disabled:opacity-60">
+        <button type="submit" disabled={pending} className="mt-3 min-h-[44px] rounded-lg bg-rose-300 px-4 text-sm font-bold text-ink-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-periwinkle disabled:opacity-60">
           {pending ? "Deleting…" : "Confirm delete"}
         </button>
       </form>
